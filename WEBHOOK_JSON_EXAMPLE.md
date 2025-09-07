@@ -4,7 +4,7 @@
 
 ### **URL do Webhook:**
 ```
-POST https://api.idenegociosdigitais.com.br/webhook-test/marcar-reuniao
+POST https://api.idenegociosdigitais.com.br/webhook/marcar-reuniao
 ```
 
 ### **Headers:**
@@ -136,7 +136,7 @@ Accept: application/json
 
 ### **cURL para Teste:**
 ```bash
-curl -X POST https://api.idenegociosdigitais.com.br/webhook-test/marcar-reuniao \
+curl -X POST https://api.idenegociosdigitais.com.br/webhook/marcar-reuniao \
   -H "Content-Type: application/json" \
   -H "Accept: application/json" \
   -d '{

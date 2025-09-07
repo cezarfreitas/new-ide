@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
     console.log('API Route: Dados recebidos:', body);
     
     // Fazer a requisição para o webhook externo
-    const response = await fetch('https://api.idenegociosdigitais.com.br/webhook-test/marcar-reuniao', {
+    const response = await fetch('https://api.idenegociosdigitais.com.br/webhook/marcar-reuniao', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
