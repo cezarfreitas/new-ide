@@ -31,7 +31,7 @@ export default function MeetingModal({ isOpen, onClose }: MeetingModalProps) {
 
     try {
       // URL do webhook hardcoded
-      const webhookUrl = 'https://api.idenegociosdigitais.com.br/webhook/marcar-reuniao';
+      const webhookUrl = 'https://api.idenegociosdigitais.com.br/webhook-test/marcar-reuniao';
       
       // Dados de marketing para envio
       const marketingData = {
@@ -57,6 +57,12 @@ export default function MeetingModal({ isOpen, onClose }: MeetingModalProps) {
         currency: 'BRL',
       };
       
+      // Log para debug
+      console.log('Enviando dados para webhook:', {
+        url: webhookUrl,
+        data: marketingData
+      });
+
       const response = await fetch(webhookUrl, {
         method: 'POST',
         headers: {
@@ -64,6 +70,13 @@ export default function MeetingModal({ isOpen, onClose }: MeetingModalProps) {
           'Accept': 'application/json',
         },
         body: JSON.stringify(marketingData),
+      });
+
+      // Log da resposta
+      console.log('Resposta do webhook:', {
+        status: response.status,
+        statusText: response.statusText,
+        ok: response.ok
       });
 
       if (response.ok) {
@@ -88,7 +101,13 @@ export default function MeetingModal({ isOpen, onClose }: MeetingModalProps) {
           setSubmitStatus('idle');
         }, 2000);
       } else {
-        throw new Error('Erro ao enviar formulário');
+        const errorText = await response.text();
+        console.error('Erro do servidor:', {
+          status: response.status,
+          statusText: response.statusText,
+          error: errorText
+        });
+        throw new Error(`Erro ${response.status}: ${response.statusText}`);
       }
     } catch (error) {
       console.error('Erro ao enviar formulário:', error);
