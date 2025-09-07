@@ -87,7 +87,7 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    ...(env.GOOGLE_VERIFICATION && { google: env.GOOGLE_VERIFICATION }),
+    google: 'G-G1YXN755WQ', // Google verification hardcoded
     ...(env.YANDEX_VERIFICATION && { yandex: env.YANDEX_VERIFICATION }),
     ...(env.YAHOO_VERIFICATION && { yahoo: env.YAHOO_VERIFICATION }),
     other: {
@@ -114,7 +114,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const gaMeasurementId = env.GA_MEASUREMENT_ID;
+  const gaMeasurementId = 'G-G1YXN755WQ'; // GA4 ID hardcoded
   const metaPixelId = env.META_PIXEL_ID;
 
   return (

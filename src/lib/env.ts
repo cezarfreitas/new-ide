@@ -1,7 +1,7 @@
 // Environment variables validation and defaults
 export const env = {
   // Analytics
-  GA_MEASUREMENT_ID: process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || '',
+  GA_MEASUREMENT_ID: process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || 'G-G1YXN755WQ',
   META_PIXEL_ID: process.env.NEXT_PUBLIC_META_PIXEL_ID || '',
   
   // Webhook
