@@ -18,7 +18,7 @@ const nextConfig: NextConfig = {
 
   // Experimental features for performance
   experimental: {
-    optimizeCss: true,
+    // Disabled experimental features that may cause build issues
     optimizePackageImports: ['@heroicons/react', 'framer-motion'],
   },
 
