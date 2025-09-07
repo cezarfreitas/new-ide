@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import Link from 'next/link';
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 
 export default function Error({
@@ -34,12 +35,12 @@ export default function Error({
             Tentar Novamente
           </button>
           
-          <a
+          <Link
             href="/"
             className="inline-block bg-gray-800 hover:bg-gray-700 text-white font-bold px-6 py-3 rounded-lg transition-all duration-300"
           >
             Voltar ao Início
-          </a>
+          </Link>
         </div>
       </div>
     </div>
