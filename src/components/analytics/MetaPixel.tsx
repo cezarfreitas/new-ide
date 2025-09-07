@@ -12,7 +12,7 @@ declare global {
     fbq: (
       command: 'init' | 'track' | 'trackCustom',
       eventName: string,
-      parameters?: Record<string, any>
+      parameters?: Record<string, unknown>
     ) => void;
   }
 }
@@ -46,6 +46,7 @@ export default function MetaPixel({ pixelId }: MetaPixelProps) {
         }}
       />
       <noscript>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           height="1"
           width="1"

@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { ArrowRightIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
+import { ArrowRightIcon } from '@heroicons/react/24/outline';
 import { useState } from 'react';
 import MeetingModal from '@/components/ui/MeetingModal';
 import { useAnalytics } from '@/hooks/useAnalytics';

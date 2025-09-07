@@ -61,7 +61,7 @@ export default function ClientsSection({ clients }: ClientsSectionProps) {
               ))}
             </div>
             <blockquote className="text-lg font-medium mb-4 max-w-3xl mx-auto">
-              "Em 4 meses tivemos CRM B2B funcionando adequadamente. A automação comercial melhorou nossa qualificação de leads e aumentou nossa conversão. ROI positivo no primeiro ano."
+              &ldquo;Em 4 meses tivemos CRM B2B funcionando adequadamente. A automação comercial melhorou nossa qualificação de leads e aumentou nossa conversão. ROI positivo no primeiro ano.&rdquo;
             </blockquote>
             <cite className="text-gray-800 font-semibold">
               CEO - Empresa B2B que implementou CRM completo

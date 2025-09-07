@@ -21,7 +21,7 @@ export default function MeetingModal({ isOpen, onClose }: MeetingModalProps) {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
-  const { trackFormSubmission, trackButtonClick } = useAnalytics();
+  const { trackFormSubmission } = useAnalytics();
   const { trackLead, trackContact, trackFormSubmission: trackMetaFormSubmission } = useMetaPixel();
 
   const handleSubmit = async (e: React.FormEvent) => {

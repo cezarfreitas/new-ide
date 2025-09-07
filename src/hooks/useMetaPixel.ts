@@ -7,19 +7,19 @@ declare global {
     fbq: (
       command: 'init' | 'track' | 'trackCustom',
       eventName: string,
-      parameters?: Record<string, any>
+      parameters?: Record<string, unknown>
     ) => void;
   }
 }
 
 export const useMetaPixel = () => {
-  const trackEvent = useCallback((eventName: string, parameters?: Record<string, any>) => {
+  const trackEvent = useCallback((eventName: string, parameters?: Record<string, unknown>) => {
     if (typeof window !== 'undefined' && window.fbq) {
       window.fbq('track', eventName, parameters);
     }
   }, []);
 
-  const trackCustomEvent = useCallback((eventName: string, parameters?: Record<string, any>) => {
+  const trackCustomEvent = useCallback((eventName: string, parameters?: Record<string, unknown>) => {
     if (typeof window !== 'undefined' && window.fbq) {
       window.fbq('trackCustom', eventName, parameters);
     }

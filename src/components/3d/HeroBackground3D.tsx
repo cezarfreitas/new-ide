@@ -2,7 +2,7 @@
 
 import { useRef, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, Line, Sphere, Box } from '@react-three/drei';
+import { Line, Sphere, Box } from '@react-three/drei';
 import * as THREE from 'three';
 
 // Floating Cubes Component

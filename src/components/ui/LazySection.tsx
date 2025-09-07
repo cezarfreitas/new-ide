@@ -15,7 +15,7 @@ export default function LazySection({
   threshold = 0.1,
   rootMargin = '50px'
 }: LazySectionProps) {
-  const [isVisible, setIsVisible] = useState(false);
+  const [, setIsVisible] = useState(false);
   const [hasBeenVisible, setHasBeenVisible] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 

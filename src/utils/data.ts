@@ -1,13 +1,4 @@
-import { 
-  CodeBracketIcon, 
-  DevicePhoneMobileIcon, 
-  GlobeAltIcon,
-  RocketLaunchIcon,
-  ShieldCheckIcon,
-  UserGroupIcon,
-  StarIcon,
-  ClockIcon
-} from '@heroicons/react/24/outline';
+// Icons are now imported dynamically in components
 import { Service, NavigationItem, Feature, Statistic } from '@/types';
 
 export const navigationItems: NavigationItem[] = [
