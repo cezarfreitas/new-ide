@@ -30,19 +30,40 @@ export default function MeetingModal({ isOpen, onClose }: MeetingModalProps) {
     setSubmitStatus('idle');
 
     try {
-      // URL do webhook - você pode configurar esta URL
-      const webhookUrl = process.env.NEXT_PUBLIC_WEBHOOK_URL || 'https://hooks.zapier.com/hooks/catch/your-webhook-url';
+      // URL do webhook hardcoded
+      const webhookUrl = 'https://api.idenegociosdigitais.com.br/webhook/marcar-reuniao';
+      
+      // Dados de marketing para envio
+      const marketingData = {
+        ...formData,
+        // Dados de marketing UTM
+        utm_source: typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('utm_source') || 'direct' : 'direct',
+        utm_medium: typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('utm_medium') || 'website' : 'website',
+        utm_campaign: typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('utm_campaign') || 'organic' : 'organic',
+        utm_term: typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('utm_term') || '' : '',
+        utm_content: typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('utm_content') || '' : '',
+        // Dados da sessão
+        page_url: typeof window !== 'undefined' ? window.location.href : '',
+        referrer: typeof window !== 'undefined' ? document.referrer : '',
+        user_agent: typeof window !== 'undefined' ? navigator.userAgent : '',
+        timestamp: new Date().toISOString(),
+        // Dados do formulário
+        form_type: 'meeting_request',
+        lead_source: 'website',
+        lead_quality: 'high',
+        source: 'IDE Negócios Digitais - Formulário de Contato',
+        // Dados de conversão
+        conversion_value: 100,
+        currency: 'BRL',
+      };
       
       const response = await fetch(webhookUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json',
         },
-        body: JSON.stringify({
-          ...formData,
-          timestamp: new Date().toISOString(),
-          source: 'IDE Negócios Digitais - Formulário de Contato'
-        }),
+        body: JSON.stringify(marketingData),
       });
 
       if (response.ok) {
