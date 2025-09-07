@@ -115,7 +115,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const gaMeasurementId = 'G-G1YXN755WQ'; // GA4 ID hardcoded
-  const metaPixelId = env.META_PIXEL_ID;
+  const metaPixelId = '703558478389535'; // Meta Pixel ID hardcoded
 
   return (
     <html lang="pt-BR" suppressHydrationWarning>
