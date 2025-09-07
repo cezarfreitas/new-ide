@@ -22,6 +22,18 @@ const nextConfig: NextConfig = {
     optimizePackageImports: ['@heroicons/react', 'framer-motion'],
   },
 
+  // TypeScript configuration
+  typescript: {
+    // Ignore TypeScript errors during build for production
+    ignoreBuildErrors: false,
+  },
+
+  // ESLint configuration
+  eslint: {
+    // Ignore ESLint errors during build for production
+    ignoreDuringBuilds: false,
+  },
+
   // Headers for better caching and security
   async headers() {
     return [

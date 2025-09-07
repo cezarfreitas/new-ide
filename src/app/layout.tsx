@@ -5,6 +5,7 @@ import ParticleBackground from "@/components/ui/ParticleBackground";
 import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 import MetaPixel from "@/components/analytics/MetaPixel";
 import StructuredData from "@/components/seo/StructuredData";
+import { env } from "@/lib/env";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -86,12 +87,12 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    ...(process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION && { google: process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION }),
-    ...(process.env.NEXT_PUBLIC_YANDEX_VERIFICATION && { yandex: process.env.NEXT_PUBLIC_YANDEX_VERIFICATION }),
-    ...(process.env.NEXT_PUBLIC_YAHOO_VERIFICATION && { yahoo: process.env.NEXT_PUBLIC_YAHOO_VERIFICATION }),
+    ...(env.GOOGLE_VERIFICATION && { google: env.GOOGLE_VERIFICATION }),
+    ...(env.YANDEX_VERIFICATION && { yandex: env.YANDEX_VERIFICATION }),
+    ...(env.YAHOO_VERIFICATION && { yahoo: env.YAHOO_VERIFICATION }),
     other: {
-      ...(process.env.NEXT_PUBLIC_FACEBOOK_VERIFICATION && { 'facebook-domain-verification': process.env.NEXT_PUBLIC_FACEBOOK_VERIFICATION }),
-      ...(process.env.NEXT_PUBLIC_PINTEREST_VERIFICATION && { 'pinterest-site-verification': process.env.NEXT_PUBLIC_PINTEREST_VERIFICATION }),
+      ...(env.FACEBOOK_VERIFICATION && { 'facebook-domain-verification': env.FACEBOOK_VERIFICATION }),
+      ...(env.PINTEREST_VERIFICATION && { 'pinterest-site-verification': env.PINTEREST_VERIFICATION }),
     },
   },
   category: 'Business',
@@ -113,8 +114,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const gaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
-  const metaPixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID;
+  const gaMeasurementId = env.GA_MEASUREMENT_ID;
+  const metaPixelId = env.META_PIXEL_ID;
 
   return (
     <html lang="pt-BR" suppressHydrationWarning>
