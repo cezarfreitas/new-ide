@@ -5,6 +5,9 @@ const nextConfig: NextConfig = {
   compress: true,
   poweredByHeader: false,
   
+  // Docker deployment
+  output: 'standalone',
+  
   // Image optimization
   images: {
     formats: ['image/webp', 'image/avif'],
