@@ -30,8 +30,8 @@ export default function MeetingModal({ isOpen, onClose }: MeetingModalProps) {
     setSubmitStatus('idle');
 
     try {
-      // URL do webhook hardcoded
-      const webhookUrl = 'https://api.idenegociosdigitais.com.br/webhook-test/marcar-reuniao';
+      // URL do webhook via API route (resolve CORS)
+      const webhookUrl = '/api/webhook';
       
       // Dados de marketing para envio
       const marketingData = {

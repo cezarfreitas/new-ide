@@ -5,7 +5,7 @@ export const env = {
   META_PIXEL_ID: process.env.NEXT_PUBLIC_META_PIXEL_ID || '703558478389535',
   
   // Webhook
-  WEBHOOK_URL: process.env.NEXT_PUBLIC_WEBHOOK_URL || 'https://api.idenegociosdigitais.com.br/webhook-test/marcar-reuniao',
+  WEBHOOK_URL: process.env.NEXT_PUBLIC_WEBHOOK_URL || '/api/webhook',
   
   // Site Configuration
   SITE_URL: process.env.NEXT_PUBLIC_SITE_URL || 'https://idenegociosdigitais.com.br',
