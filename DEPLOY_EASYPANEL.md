@@ -37,29 +37,31 @@ ls -la
 
 #### **C. Configurar Variáveis de Ambiente:**
 ```env
-# Analytics
+# Analytics (Obrigatórias)
 NEXT_PUBLIC_GA_MEASUREMENT_ID=G-G1YXN755WQ
 NEXT_PUBLIC_META_PIXEL_ID=1234567890123456
 
-# Webhook
+# Webhook (Obrigatória)
 NEXT_PUBLIC_WEBHOOK_URL=https://hooks.zapier.com/hooks/catch/your-webhook-url
 
-# Verificações
-NEXT_PUBLIC_GOOGLE_VERIFICATION=G-G1YXN755WQ
-NEXT_PUBLIC_FACEBOOK_VERIFICATION=your-facebook-verification-code
-NEXT_PUBLIC_PINTEREST_VERIFICATION=your-pinterest-verification-code
-
-# Site
+# Site Configuration (Obrigatórias)
 NEXT_PUBLIC_SITE_URL=https://your-domain.com
 NEXT_PUBLIC_COMPANY_NAME=IDE Negócios Digitais
 NEXT_PUBLIC_CONTACT_EMAIL=contato@idenegociosdigitais.com.br
 NEXT_PUBLIC_CONTACT_PHONE=+55-11-99999-9999
 
-# Redes Sociais
+# Social Media (Obrigatórias)
 NEXT_PUBLIC_TWITTER_HANDLE=@idenegociosdigitais
 NEXT_PUBLIC_INSTAGRAM_HANDLE=@idenegociosdigitais
 NEXT_PUBLIC_LINKEDIN_URL=https://www.linkedin.com/company/ide-negocios-digitais
 NEXT_PUBLIC_FACEBOOK_URL=https://www.facebook.com/idenegociosdigitais
+
+# Site Verification (Opcionais - podem ser deixadas em branco)
+NEXT_PUBLIC_GOOGLE_VERIFICATION=your-google-verification-code
+NEXT_PUBLIC_FACEBOOK_VERIFICATION=your-facebook-verification-code
+NEXT_PUBLIC_PINTEREST_VERIFICATION=your-pinterest-verification-code
+NEXT_PUBLIC_YANDEX_VERIFICATION=your-yandex-verification-code
+NEXT_PUBLIC_YAHOO_VERIFICATION=your-yahoo-verification-code
 ```
 
 #### **D. Configurar Domínio:**

@@ -86,12 +86,12 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    google: process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION,
-    yandex: process.env.NEXT_PUBLIC_YANDEX_VERIFICATION,
-    yahoo: process.env.NEXT_PUBLIC_YAHOO_VERIFICATION,
+    ...(process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION && { google: process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION }),
+    ...(process.env.NEXT_PUBLIC_YANDEX_VERIFICATION && { yandex: process.env.NEXT_PUBLIC_YANDEX_VERIFICATION }),
+    ...(process.env.NEXT_PUBLIC_YAHOO_VERIFICATION && { yahoo: process.env.NEXT_PUBLIC_YAHOO_VERIFICATION }),
     other: {
-      'facebook-domain-verification': process.env.NEXT_PUBLIC_FACEBOOK_VERIFICATION,
-      'pinterest-site-verification': process.env.NEXT_PUBLIC_PINTEREST_VERIFICATION,
+      ...(process.env.NEXT_PUBLIC_FACEBOOK_VERIFICATION && { 'facebook-domain-verification': process.env.NEXT_PUBLIC_FACEBOOK_VERIFICATION }),
+      ...(process.env.NEXT_PUBLIC_PINTEREST_VERIFICATION && { 'pinterest-site-verification': process.env.NEXT_PUBLIC_PINTEREST_VERIFICATION }),
     },
   },
   category: 'Business',
