@@ -3,6 +3,8 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { ContactForm } from '@/types';
+import { useAnalytics } from '@/hooks/useAnalytics';
+import { useMetaPixel } from '@/hooks/useMetaPixel';
 
 export default function ContactSection() {
   const [formData, setFormData] = useState<ContactForm>({
@@ -11,6 +13,10 @@ export default function ContactSection() {
     company: '',
     message: ''
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const { trackFormSubmission } = useAnalytics();
+  const { trackContact, trackFormSubmission: trackMetaFormSubmission } = useMetaPixel();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -20,17 +26,93 @@ export default function ContactSection() {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Aqui você pode implementar a lógica de envio do formulário
-    console.log('Form data:', formData);
-    // Reset form
-    setFormData({
-      name: '',
-      email: '',
-      company: '',
-      message: ''
-    });
+    setIsSubmitting(true);
+    setSubmitStatus('idle');
+
+    try {
+      // URL do webhook via API route (resolve CORS)
+      const webhookUrl = '/api/contact';
+      
+      // Dados de marketing para envio
+      const marketingData = {
+        ...formData,
+        // Dados de marketing UTM
+        utm_source: typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('utm_source') || 'direct' : 'direct',
+        utm_medium: typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('utm_medium') || 'website' : 'website',
+        utm_campaign: typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('utm_campaign') || 'organic' : 'organic',
+        utm_term: typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('utm_term') || '' : '',
+        utm_content: typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('utm_content') || '' : '',
+        // Dados da sessão
+        page_url: typeof window !== 'undefined' ? window.location.href : '',
+        referrer: typeof window !== 'undefined' ? document.referrer : '',
+        user_agent: typeof window !== 'undefined' ? navigator.userAgent : '',
+        timestamp: new Date().toISOString(),
+        // Dados do formulário
+        form_type: 'contact_form',
+        lead_source: 'website',
+        lead_quality: 'medium',
+        source: 'IDE Negócios Digitais - Formulário de Contato',
+        // Dados de conversão
+        conversion_value: 50,
+        currency: 'BRL',
+      };
+      
+      // Log para debug
+      console.log('Enviando dados para webhook de contato:', {
+        url: webhookUrl,
+        data: marketingData
+      });
+
+      const response = await fetch(webhookUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify(marketingData),
+      });
+
+      // Log da resposta
+      console.log('Resposta do webhook de contato:', {
+        status: response.status,
+        statusText: response.statusText,
+        ok: response.ok
+      });
+
+      if (response.ok) {
+        setSubmitStatus('success');
+        // Track successful form submission
+        trackFormSubmission('contact_form', true);
+        trackContact();
+        trackMetaFormSubmission('contact_form', true);
+        
+        // Reset form
+        setFormData({
+          name: '',
+          email: '',
+          company: '',
+          message: ''
+        });
+      } else {
+        const errorText = await response.text();
+        console.error('Erro do servidor de contato:', {
+          status: response.status,
+          statusText: response.statusText,
+          error: errorText
+        });
+        throw new Error(`Erro ${response.status}: ${response.statusText}`);
+      }
+    } catch (error) {
+      console.error('Erro ao enviar formulário de contato:', error);
+      setSubmitStatus('error');
+      // Track failed form submission
+      trackFormSubmission('contact_form', false);
+      trackMetaFormSubmission('contact_form', false);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -92,10 +174,28 @@ export default function ContactSection() {
               />
               <button
                 type="submit"
-                className="w-full bg-yellow-500 text-black px-8 py-4 rounded-lg text-lg font-semibold hover:bg-yellow-400 transition-colors shadow-lg shadow-yellow-500/25"
+                disabled={isSubmitting}
+                className={`w-full px-8 py-4 rounded-lg text-lg font-semibold transition-colors shadow-lg ${
+                  isSubmitting 
+                    ? 'bg-gray-500 text-gray-300 cursor-not-allowed' 
+                    : 'bg-yellow-500 text-black hover:bg-yellow-400 shadow-yellow-500/25'
+                }`}
               >
-                Agendar Consultoria Gratuita
+                {isSubmitting ? 'Enviando...' : 'Agendar Consultoria Gratuita'}
               </button>
+              
+              {/* Status Messages */}
+              {submitStatus === 'success' && (
+                <div className="mt-4 p-4 bg-green-500/20 border border-green-500/50 rounded-lg text-green-400">
+                  ✅ Mensagem enviada com sucesso! Entraremos em contato em breve.
+                </div>
+              )}
+              
+              {submitStatus === 'error' && (
+                <div className="mt-4 p-4 bg-red-500/20 border border-red-500/50 rounded-lg text-red-400">
+                  ❌ Erro ao enviar mensagem. Tente novamente ou entre em contato diretamente.
+                </div>
+              )}
             </form>
           </div>
           
