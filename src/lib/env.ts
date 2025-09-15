@@ -25,6 +25,14 @@ export const env = {
   PINTEREST_VERIFICATION: process.env.NEXT_PUBLIC_PINTEREST_VERIFICATION || '',
   YANDEX_VERIFICATION: process.env.NEXT_PUBLIC_YANDEX_VERIFICATION || '',
   YAHOO_VERIFICATION: process.env.NEXT_PUBLIC_YAHOO_VERIFICATION || '',
+  
+  // Email Configuration
+  SMTP_HOST: process.env.SMTP_HOST || '',
+  SMTP_PORT: process.env.SMTP_PORT || '587',
+  SMTP_USER: process.env.SMTP_USER || '',
+  SMTP_PASS: process.env.SMTP_PASS || '',
+  SMTP_FROM: process.env.SMTP_FROM || 'contato@idenegociosdigitais.com.br',
+  SMTP_TO: process.env.SMTP_TO || 'contato@idenegociosdigitais.com.br',
 } as const;
 
 // Validation function
@@ -39,10 +47,21 @@ export function validateEnv() {
     'CONTACT_PHONE',
   ];
   
+  const emailRequired = [
+    'SMTP_HOST',
+    'SMTP_USER',
+    'SMTP_PASS',
+  ];
+  
   const missing = required.filter(key => !env[key as keyof typeof env]);
+  const emailMissing = emailRequired.filter(key => !env[key as keyof typeof env]);
   
   if (missing.length > 0) {
     console.warn(`Missing required environment variables: ${missing.join(', ')}`);
+  }
+  
+  if (emailMissing.length > 0) {
+    console.warn(`Missing email configuration: ${emailMissing.join(', ')}. Email functionality will be disabled.`);
   }
   
   return missing.length === 0;

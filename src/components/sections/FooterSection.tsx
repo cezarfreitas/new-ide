@@ -38,7 +38,7 @@ export default function FooterSection({
             <ul className="space-y-2 text-gray-400">
               {services.map((service, index) => (
                 <li key={index}>
-                  <a href="#" className="hover:text-yellow-500 transition-colors">
+                  <a href="#" className="hover:text-yellow-500 transition-colors cursor-pointer">
                     {service}
                   </a>
                 </li>
@@ -51,7 +51,7 @@ export default function FooterSection({
             <ul className="space-y-2 text-gray-400">
               {companyLinks.map((link, index) => (
                 <li key={index}>
-                  <a href="#" className="hover:text-yellow-500 transition-colors">
+                  <a href="#" className="hover:text-yellow-500 transition-colors cursor-pointer">
                     {link}
                   </a>
                 </li>
@@ -63,10 +63,10 @@ export default function FooterSection({
             <h3 className="text-lg font-semibold mb-4 text-yellow-500">Contato Direto</h3>
             <ul className="space-y-2 text-gray-400">
               <li className="hover:text-yellow-500 transition-colors">
-                <a href={`mailto:${companyInfo.email}`}>{companyInfo.email}</a>
+                <a href={`mailto:${companyInfo.email}`} className="cursor-pointer">{companyInfo.email}</a>
               </li>
               <li className="hover:text-yellow-500 transition-colors">
-                <a href={`tel:${companyInfo.phone}`}>{companyInfo.phone}</a>
+                <a href={`tel:${companyInfo.phone}`} className="cursor-pointer">{companyInfo.phone}</a>
               </li>
               <li className="text-sm">{companyInfo.address}</li>
             </ul>

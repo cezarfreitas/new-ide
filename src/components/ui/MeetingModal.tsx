@@ -30,9 +30,6 @@ export default function MeetingModal({ isOpen, onClose }: MeetingModalProps) {
     setSubmitStatus('idle');
 
     try {
-      // URL do webhook via API route (resolve CORS)
-      const webhookUrl = '/api/webhook';
-      
       // Dados de marketing para envio
       const marketingData = {
         ...formData,
@@ -58,28 +55,50 @@ export default function MeetingModal({ isOpen, onClose }: MeetingModalProps) {
       };
       
       // Log para debug
-      console.log('Enviando dados para webhook:', {
-        url: webhookUrl,
-        data: marketingData
-      });
+      console.log('Enviando dados do formulário:', marketingData);
 
-      const response = await fetch(webhookUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
+      // Enviar para webhook e email em paralelo
+      const [webhookResponse, emailResponse] = await Promise.allSettled([
+        // Envio para webhook
+        fetch('/api/webhook', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+          body: JSON.stringify(marketingData),
+        }),
+        // Envio para email
+        fetch('/api/email', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+          body: JSON.stringify(marketingData),
+        })
+      ]);
+
+      // Verificar resultados
+      const webhookSuccess = webhookResponse.status === 'fulfilled' && webhookResponse.value.ok;
+      const emailSuccess = emailResponse.status === 'fulfilled' && emailResponse.value.ok;
+
+      // Log dos resultados
+      console.log('Resultados do envio:', {
+        webhook: {
+          status: webhookResponse.status,
+          success: webhookSuccess,
+          error: webhookResponse.status === 'rejected' ? webhookResponse.reason : null
         },
-        body: JSON.stringify(marketingData),
+        email: {
+          status: emailResponse.status,
+          success: emailSuccess,
+          error: emailResponse.status === 'rejected' ? emailResponse.reason : null
+        }
       });
 
-      // Log da resposta
-      console.log('Resposta do webhook:', {
-        status: response.status,
-        statusText: response.statusText,
-        ok: response.ok
-      });
-
-      if (response.ok) {
+      // Considerar sucesso se pelo menos um dos envios funcionou
+      if (webhookSuccess || emailSuccess) {
         setSubmitStatus('success');
         // Track successful form submission
         trackFormSubmission('contact_form', true);
@@ -101,13 +120,13 @@ export default function MeetingModal({ isOpen, onClose }: MeetingModalProps) {
           setSubmitStatus('idle');
         }, 2000);
       } else {
-        const errorText = await response.text();
-        console.error('Erro do servidor:', {
-          status: response.status,
-          statusText: response.statusText,
-          error: errorText
-        });
-        throw new Error(`Erro ${response.status}: ${response.statusText}`);
+        // Se ambos falharam, mostrar erro
+        const webhookError = webhookResponse.status === 'rejected' ? webhookResponse.reason : 
+          (webhookResponse.status === 'fulfilled' ? `Webhook: ${webhookResponse.value.status}` : 'Webhook: Erro desconhecido');
+        const emailError = emailResponse.status === 'rejected' ? emailResponse.reason : 
+          (emailResponse.status === 'fulfilled' ? `Email: ${emailResponse.value.status}` : 'Email: Erro desconhecido');
+        
+        throw new Error(`Falha no envio: ${webhookError}, ${emailError}`);
       }
     } catch (error) {
       console.error('Erro ao enviar formulário:', error);
@@ -172,7 +191,7 @@ export default function MeetingModal({ isOpen, onClose }: MeetingModalProps) {
               </div>
               <button
                 onClick={onClose}
-                className="text-gray-400 hover:text-yellow-400 transition-colors p-2"
+                className="text-gray-400 hover:text-yellow-400 transition-colors p-2 cursor-pointer"
               >
                 <XMarkIcon className="w-6 h-6" />
               </button>
@@ -290,14 +309,14 @@ export default function MeetingModal({ isOpen, onClose }: MeetingModalProps) {
                   type="button"
                   onClick={onClose}
                   disabled={isSubmitting}
-                  className="flex-1 px-6 py-3 border border-gray-700 text-gray-300 rounded-lg hover:border-yellow-500 hover:text-yellow-400 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 px-6 py-3 border border-gray-700 text-gray-300 rounded-lg hover:border-yellow-500 hover:text-yellow-400 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="flex-1 px-6 py-3 bg-gradient-to-r from-yellow-500 to-yellow-400 text-black rounded-lg hover:from-yellow-400 hover:to-yellow-300 transition-all font-semibold shadow-lg hover:shadow-yellow-500/25 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                  className="flex-1 px-6 py-3 bg-gradient-to-r from-yellow-500 to-yellow-400 text-black rounded-lg hover:from-yellow-400 hover:to-yellow-300 transition-all font-semibold shadow-lg hover:shadow-yellow-500/25 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center"
                 >
                   {isSubmitting ? (
                     <div className="flex items-center space-x-2">

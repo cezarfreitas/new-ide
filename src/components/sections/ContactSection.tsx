@@ -116,26 +116,26 @@ export default function ContactSection() {
   };
 
   return (
-    <section id="contato" className="py-16 px-4 sm:px-6 lg:px-8 bg-black">
+    <section id="contato" className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 bg-black">
       <div className="max-w-4xl mx-auto text-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4 sm:mb-6">
             Fale Conosco
           </h2>
-          <p className="text-xl text-yellow-200 mb-4">
+          <p className="text-lg sm:text-xl text-yellow-200 mb-3 sm:mb-4">
             Implemente CRM B2B em seu negócio
           </p>
-          <p className="text-lg text-yellow-300 mb-8">
+          <p className="text-base sm:text-lg text-yellow-300 mb-6 sm:mb-8 px-4">
             Agende uma consultoria gratuita para avaliar como CRM B2B + Vendas Digitais + Capacitação podem beneficiar sua empresa
           </p>
           
-          <div className="bg-black rounded-2xl p-8 border border-yellow-500/30">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid md:grid-cols-2 gap-6">
+          <div className="bg-black rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 border border-yellow-500/30">
+            <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 <input
                   type="text"
                   name="name"
@@ -143,7 +143,7 @@ export default function ContactSection() {
                   value={formData.name}
                   onChange={handleInputChange}
                   required
-                  className="w-full px-4 py-3 rounded-lg border border-yellow-500/50 bg-black text-white placeholder-yellow-300/70 focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500"
+                  className="w-full px-4 py-3 sm:py-4 rounded-lg border border-yellow-500/50 bg-black text-white placeholder-yellow-300/70 focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 text-base"
                 />
                 <input
                   type="email"
@@ -152,16 +152,16 @@ export default function ContactSection() {
                   value={formData.email}
                   onChange={handleInputChange}
                   required
-                  className="w-full px-4 py-3 rounded-lg border border-yellow-500/50 bg-black text-white placeholder-yellow-300/70 focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500"
+                  className="w-full px-4 py-3 sm:py-4 rounded-lg border border-yellow-500/50 bg-black text-white placeholder-yellow-300/70 focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 text-base"
                 />
               </div>
               <input
-                type="text"
+                type="tel"
                 name="company"
-                placeholder="Telefone"
+                placeholder="Telefone (11) 99999-9999"
                 value={formData.company}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 rounded-lg border border-gray-600 bg-gray-700 text-white placeholder-gray-400 focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                className="w-full px-4 py-3 sm:py-4 rounded-lg border border-yellow-500/50 bg-black text-white placeholder-yellow-300/70 focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 text-base"
               />
               <textarea
                 name="message"
@@ -170,15 +170,15 @@ export default function ContactSection() {
                 value={formData.message}
                 onChange={handleInputChange}
                 required
-                className="w-full px-4 py-3 rounded-lg border border-gray-600 bg-gray-700 text-white placeholder-gray-400 focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                className="w-full px-4 py-3 sm:py-4 rounded-lg border border-yellow-500/50 bg-black text-white placeholder-yellow-300/70 focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 text-base resize-none"
               />
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className={`w-full px-8 py-4 rounded-lg text-lg font-semibold transition-colors shadow-lg ${
+                className={`w-full px-6 sm:px-8 py-3 sm:py-4 rounded-lg text-base sm:text-lg font-semibold transition-all duration-300 shadow-lg ${
                   isSubmitting 
                     ? 'bg-gray-500 text-gray-300 cursor-not-allowed' 
-                    : 'bg-yellow-500 text-black hover:bg-yellow-400 shadow-yellow-500/25'
+                    : 'bg-yellow-500 text-black hover:bg-yellow-400 hover:scale-105 shadow-yellow-500/25 active:scale-95 cursor-pointer'
                 }`}
               >
                 {isSubmitting ? 'Enviando...' : 'Agendar Consultoria Gratuita'}
@@ -186,15 +186,23 @@ export default function ContactSection() {
               
               {/* Status Messages */}
               {submitStatus === 'success' && (
-                <div className="mt-4 p-4 bg-green-500/20 border border-green-500/50 rounded-lg text-green-400">
+                <motion.div 
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mt-4 p-3 sm:p-4 bg-green-500/20 border border-green-500/50 rounded-lg text-green-400 text-sm sm:text-base"
+                >
                   ✅ Mensagem enviada com sucesso! Entraremos em contato em breve.
-                </div>
+                </motion.div>
               )}
               
               {submitStatus === 'error' && (
-                <div className="mt-4 p-4 bg-red-500/20 border border-red-500/50 rounded-lg text-red-400">
+                <motion.div 
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mt-4 p-3 sm:p-4 bg-red-500/20 border border-red-500/50 rounded-lg text-red-400 text-sm sm:text-base"
+                >
                   ❌ Erro ao enviar mensagem. Tente novamente ou entre em contato diretamente.
-                </div>
+                </motion.div>
               )}
             </form>
           </div>
@@ -204,19 +212,19 @@ export default function ContactSection() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="mt-12 grid md:grid-cols-3 gap-8"
+            className="mt-8 sm:mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"
           >
-            <div className="text-center">
-              <h3 className="text-lg font-semibold text-white mb-2">E-mail</h3>
-              <p className="text-yellow-200">contato@idenegociosdigitais.com.br</p>
+            <div className="text-center p-4 rounded-lg bg-black/50 border border-yellow-500/20">
+              <h3 className="text-base sm:text-lg font-semibold text-white mb-2">E-mail</h3>
+              <p className="text-yellow-200 text-sm sm:text-base break-all">contato@idenegociosdigitais.com.br</p>
             </div>
-            <div className="text-center">
-              <h3 className="text-lg font-semibold text-white mb-2">Telefone</h3>
-              <p className="text-yellow-200">(11) 9 9999-9999</p>
+            <div className="text-center p-4 rounded-lg bg-black/50 border border-yellow-500/20">
+              <h3 className="text-base sm:text-lg font-semibold text-white mb-2">Telefone</h3>
+              <p className="text-yellow-200 text-sm sm:text-base">(11) 9 9999-9999</p>
             </div>
-            <div className="text-center">
-              <h3 className="text-lg font-semibold text-white mb-2">Localização</h3>
-              <p className="text-yellow-200 text-sm">
+            <div className="text-center p-4 rounded-lg bg-black/50 border border-yellow-500/20 sm:col-span-2 lg:col-span-1">
+              <h3 className="text-base sm:text-lg font-semibold text-white mb-2">Localização</h3>
+              <p className="text-yellow-200 text-xs sm:text-sm">
                 R. Gen. Francisco Glicério, 1833 - Sala 4<br />
                 1°andar - Centro, Suzano - SP<br />
                 CEP: 08674-003

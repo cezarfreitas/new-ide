@@ -6,6 +6,7 @@ export const navigationItems: NavigationItem[] = [
   { label: 'Serviços', href: '#servicos' },
   { label: 'Sobre', href: '#sobre' },
   { label: 'Clientes', href: '#clientes' },
+  { label: 'Marketplace', href: '#marketplace' },
   { label: 'Contato', href: '#contato' }
 ];
 
@@ -32,7 +33,7 @@ export const services: Service[] = [
 
 export const features: Feature[] = [
   { icon: "StarIcon", text: "3 Soluções Integradas para B2B" },
-  { icon: "ClockIcon", text: "CRM Integrado em 30 Dias" },
+  { icon: "ClockIcon", text: "CRM Integrado" },
   { icon: "UserGroupIcon", text: "Ecossistema Completo B2B" },
   { icon: "ShieldCheckIcon", text: "Implementação + Operação" }
 ];

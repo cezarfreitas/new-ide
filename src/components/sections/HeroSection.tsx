@@ -13,8 +13,134 @@ export default function HeroSection() {
   const { trackButtonClick: trackMetaButtonClick } = useMetaPixel();
   return (
     <section id="inicio" className="h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 bg-black relative overflow-hidden pt-20">
-      {/* Simple gradient overlay for hero */}
-      <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/3 via-transparent to-yellow-600/2"></div>
+      {/* Animated background elements */}
+      <div className="absolute inset-0">
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/3 via-transparent to-yellow-600/2"></div>
+        
+        {/* Floating particles */}
+        <div className="absolute inset-0">
+          {[...Array(6)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-2 h-2 bg-yellow-500/20 rounded-full"
+              style={{
+                left: `${20 + i * 15}%`,
+                top: `${30 + i * 10}%`,
+              }}
+              animate={{
+                y: [-20, 20, -20],
+                x: [-10, 10, -10],
+                opacity: [0.2, 0.6, 0.2],
+              }}
+              transition={{
+                duration: 4 + i * 0.5,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: i * 0.3,
+              }}
+            />
+          ))}
+        </div>
+        
+        {/* Animated circles */}
+        <div className="absolute inset-0">
+          {[...Array(3)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute border border-yellow-500/10 rounded-full"
+              style={{
+                width: `${100 + i * 50}px`,
+                height: `${100 + i * 50}px`,
+                left: `${10 + i * 30}%`,
+                top: `${20 + i * 25}%`,
+              }}
+              animate={{
+                scale: [1, 1.1, 1],
+                opacity: [0.1, 0.3, 0.1],
+                rotate: [0, 180, 360],
+              }}
+              transition={{
+                duration: 8 + i * 2,
+                repeat: Infinity,
+                ease: "linear",
+                delay: i * 1,
+              }}
+            />
+          ))}
+        </div>
+        
+        {/* Moving lines */}
+        <div className="absolute inset-0 overflow-hidden">
+          {/* Horizontal moving lines */}
+          {[...Array(3)].map((_, i) => (
+            <motion.div
+              key={`h-${i}`}
+              className="absolute h-px bg-gradient-to-r from-transparent via-yellow-500/30 to-transparent"
+              style={{
+                width: '100vw',
+                top: `${25 + i * 25}%`,
+                left: '-100%',
+              }}
+              animate={{
+                x: ['100vw', '-100vw'],
+              }}
+              transition={{
+                duration: 8 + i * 2,
+                repeat: Infinity,
+                ease: "linear",
+                delay: i * 1.5,
+              }}
+            />
+          ))}
+          
+          {/* Vertical moving lines */}
+          {[...Array(2)].map((_, i) => (
+            <motion.div
+              key={`v-${i}`}
+              className="absolute w-px bg-gradient-to-b from-transparent via-yellow-500/20 to-transparent"
+              style={{
+                height: '100vh',
+                left: `${30 + i * 40}%`,
+                top: '-100%',
+              }}
+              animate={{
+                y: ['100vh', '-100vh'],
+              }}
+              transition={{
+                duration: 12 + i * 3,
+                repeat: Infinity,
+                ease: "linear",
+                delay: i * 2,
+              }}
+            />
+          ))}
+          
+          {/* Diagonal moving lines */}
+          {[...Array(4)].map((_, i) => (
+            <motion.div
+              key={`d-${i}`}
+              className="absolute h-px bg-gradient-to-r from-transparent via-yellow-500/15 to-transparent"
+              style={{
+                width: '200px',
+                top: `${20 + i * 20}%`,
+                left: '-200px',
+                transform: `rotate(${15 + i * 15}deg)`,
+              }}
+              animate={{
+                x: ['100vw', '-200px'],
+                y: [0, -50, 0],
+              }}
+              transition={{
+                duration: 10 + i * 2,
+                repeat: Infinity,
+                ease: "linear",
+                delay: i * 1,
+              }}
+            />
+          ))}
+        </div>
+      </div>
       
       <div className="max-w-7xl mx-auto text-center relative z-20 px-4">
         <motion.div
@@ -67,13 +193,13 @@ export default function HeroSection() {
               }}
               whileHover={{ scale: 1.05, y: -3 }}
               whileTap={{ scale: 0.98 }}
-              className="group relative bg-gradient-to-r from-yellow-500 to-yellow-400 hover:from-yellow-400 hover:to-yellow-300 text-black font-bold text-xl px-20 py-6 rounded-2xl transition-all duration-300 flex items-center space-x-4 shadow-2xl hover:shadow-yellow-500/40 overflow-hidden cursor-pointer"
+              className="group relative bg-gradient-to-r from-yellow-500 to-yellow-400 hover:from-yellow-400 hover:to-yellow-300 text-black font-bold text-base sm:text-lg lg:text-xl px-6 sm:px-8 lg:px-12 xl:px-16 py-3 sm:py-4 lg:py-5 rounded-lg sm:rounded-xl lg:rounded-2xl transition-all duration-300 flex items-center justify-center space-x-2 sm:space-x-3 lg:space-x-4 shadow-2xl hover:shadow-yellow-500/40 overflow-hidden cursor-pointer w-auto max-w-xs sm:max-w-sm lg:max-w-md whitespace-nowrap"
             >
               <motion.div
                 className="absolute inset-0 bg-gradient-to-r from-yellow-300 to-yellow-200 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
               />
-              <span className="relative z-10">Implementar CRM B2B Agora</span>
-              <ArrowRightIcon className="w-6 h-6 group-hover:translate-x-2 transition-transform duration-300 relative z-10" />
+              <span className="relative z-10">Implementar CRM Agora</span>
+              <ArrowRightIcon className="w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-2 transition-transform duration-300 relative z-10 flex-shrink-0" />
             </motion.button>
           </motion.div>
 
