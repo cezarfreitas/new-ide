@@ -7,7 +7,7 @@ import { Product } from '@/types/marketplace';
 import { useState } from 'react';
 
 export default function MarketplaceSection() {
-  const [products, setProducts] = useState<Product[]>([]);
+  const [, setProducts] = useState<Product[]>([]);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   const handleProductCreated = (newProduct: Product) => {

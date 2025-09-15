@@ -205,7 +205,7 @@ export async function POST(request: NextRequest) {
     }
     
     // Criar transporter do nodemailer
-    const transporter = nodemailer.createTransporter({
+    const transporter = nodemailer.createTransport({
       host: env.SMTP_HOST,
       port: parseInt(env.SMTP_PORT),
       secure: env.SMTP_PORT === '465', // true para 465, false para outras portas
@@ -253,7 +253,7 @@ export async function POST(request: NextRequest) {
 }
 
 // Handle OPTIONS request for CORS preflight
-export async function OPTIONS(request: NextRequest) {
+export async function OPTIONS() {
   return new NextResponse(null, {
     status: 200,
     headers: {

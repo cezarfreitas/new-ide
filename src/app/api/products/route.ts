@@ -4,7 +4,7 @@ import { ProductAnalyzer } from '@/utils/aiAnalysis';
 import { sampleProducts } from '@/utils/sampleProducts';
 
 // Simulação de banco de dados (em produção, usar um banco real)
-let products: Product[] = [...sampleProducts];
+const products: Product[] = [...sampleProducts];
 
 export async function GET() {
   try {
@@ -13,7 +13,7 @@ export async function GET() {
       data: products,
       count: products.length
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { success: false, error: 'Erro ao buscar produtos' },
       { status: 500 }
@@ -24,7 +24,7 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { title, description, clothingType, sleeveType, model }: ProductFormData = body;
+    const { title, description, model }: ProductFormData = body;
 
     // Validar dados obrigatórios
     if (!title || !description) {

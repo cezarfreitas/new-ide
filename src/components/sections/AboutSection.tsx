@@ -22,7 +22,7 @@ const iconMap = {
   ShieldCheckIcon
 } as const;
 
-export default function AboutSection({ features, statistics }: AboutSectionProps) {
+export default function AboutSection({ features }: AboutSectionProps) {
   return (
     <section id="sobre" className="py-16 px-4 sm:px-6 lg:px-8 bg-black relative">
       {/* Standard gradient overlay */}

@@ -27,7 +27,7 @@ export default function Navigation({ items }: NavigationProps) {
       if (element) {
         // Get the header height to offset the scroll
         const headerHeight = 80;
-        const elementPosition = element.offsetTop - headerHeight;
+        const elementPosition = (element as HTMLElement).offsetTop - headerHeight;
         
         window.scrollTo({
           top: Math.max(0, elementPosition),
