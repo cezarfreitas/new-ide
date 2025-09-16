@@ -56,6 +56,15 @@ export default function WhatsAppButton({
       }
     };
 
+    // Verificar scroll inicial
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    if (scrollTop > diagnosticScrollThreshold && !hasShownDiagnostic) {
+      setTimeout(() => {
+        setShowDiagnostic(true);
+        setHasShownDiagnostic(true);
+      }, diagnosticDelay);
+    }
+
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, [showDiagnosticBalloon, diagnosticScrollThreshold, diagnosticDelay, hasShownDiagnostic]);
@@ -157,25 +166,25 @@ export default function WhatsAppButton({
                 transition={{ duration: 0.3, ease: 'easeOut' }}
                 className={`absolute ${
                   position.includes('right') ? 'right-16' : 'left-16'
-                } bottom-0 bg-gradient-to-br from-yellow-500 to-orange-500 text-white p-4 rounded-2xl shadow-2xl border border-yellow-400/30 max-w-xs`}
+                } bottom-2 bg-gradient-to-br from-green-500 to-green-600 text-white p-3 rounded-xl shadow-2xl border border-green-400/30 max-w-xs`}
               >
-                <div className="flex items-start space-x-3">
-                  <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0">
-                    <span className="text-lg">💡</span>
+                <div className="flex items-start space-x-2">
+                  <div className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0">
+                    <span className="text-sm">💡</span>
                   </div>
                   <div className="flex-1">
-                    <h4 className="font-bold text-sm mb-1">Que tal fazer um diagnóstico estratégico agora?</h4>
-                    <p className="text-xs text-white/90 mb-3">Descubra como otimizar suas vendas B2B</p>
-                    <div className="flex space-x-2">
+                    <h4 className="font-bold text-xs mb-1">Que tal fazer um diagnóstico estratégico agora?</h4>
+                    <p className="text-xs text-white/90 mb-2">Descubra como otimizar suas vendas B2B</p>
+                    <div className="flex space-x-1">
                       <button
                         onClick={handleDiagnosticAccept}
-                        className="bg-white text-orange-600 text-xs font-semibold px-3 py-1 rounded-lg hover:bg-white/90 transition-colors"
+                        className="bg-white text-green-600 text-xs font-semibold px-2 py-1 rounded-lg hover:bg-white/90 transition-colors"
                       >
-                        🚀 Fazer Diagnóstico
+                        🚀 Fazer
                       </button>
                       <button
                         onClick={handleDiagnosticClose}
-                        className="text-white/80 text-xs hover:text-white transition-colors"
+                        className="text-white/80 text-xs hover:text-white transition-colors px-1"
                       >
                         ✕
                       </button>
@@ -184,12 +193,12 @@ export default function WhatsAppButton({
                 </div>
                 {/* Arrow */}
                 <div
-                  className={`absolute bottom-2 ${
+                  className={`absolute bottom-1 ${
                     position.includes('right') ? 'right-[-6px]' : 'left-[-6px]'
                   } w-0 h-0 ${
                     position.includes('right')
-                      ? 'border-l-[6px] border-l-orange-500 border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent'
-                      : 'border-r-[6px] border-r-orange-500 border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent'
+                      ? 'border-l-[6px] border-l-green-600 border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent'
+                      : 'border-r-[6px] border-r-green-600 border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent'
                   }`}
                 />
               </motion.div>

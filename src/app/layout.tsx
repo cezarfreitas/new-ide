@@ -147,8 +147,8 @@ export default function RootLayout({
           position="bottom-right"
           showOnScroll={false}
           showDiagnosticBalloon={true}
-          diagnosticScrollThreshold={800}
-          diagnosticDelay={2000}
+          diagnosticScrollThreshold={100}
+          diagnosticDelay={500}
         />
       </body>
     </html>
