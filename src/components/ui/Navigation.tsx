@@ -19,22 +19,48 @@ export default function Navigation({ items }: NavigationProps) {
   const { trackButtonClick: trackMetaButtonClick } = useMetaPixel();
 
   const handleNavClick = (href: string) => {
+    console.log('Navigating to:', href);
     setIsMenuOpen(false);
     
     // Wait for menu animation to complete, then scroll
     setTimeout(() => {
       const element = document.querySelector(href);
+      console.log('Element found:', element);
+      
       if (element) {
         // Get the header height to offset the scroll
         const headerHeight = 80;
         const elementPosition = (element as HTMLElement).offsetTop - headerHeight;
+        console.log('Scrolling to position:', elementPosition);
         
-        window.scrollTo({
-          top: Math.max(0, elementPosition),
-          behavior: 'smooth'
+        // Use requestAnimationFrame for better performance
+        requestAnimationFrame(() => {
+          window.scrollTo({
+            top: Math.max(0, elementPosition),
+            behavior: 'smooth'
+          });
         });
+      } else {
+        // Fallback: try to find element by ID without #
+        const id = href.replace('#', '');
+        const fallbackElement = document.getElementById(id);
+        console.log('Fallback element found:', fallbackElement);
+        
+        if (fallbackElement) {
+          const headerHeight = 80;
+          const elementPosition = fallbackElement.offsetTop - headerHeight;
+          
+          requestAnimationFrame(() => {
+            window.scrollTo({
+              top: Math.max(0, elementPosition),
+              behavior: 'smooth'
+            });
+          });
+        } else {
+          console.error('Element not found:', href);
+        }
       }
-    }, 200);
+    }, 300); // Increased timeout for mobile
   };
 
   return (
