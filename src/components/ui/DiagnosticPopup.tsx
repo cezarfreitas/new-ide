@@ -104,22 +104,22 @@ export default function DiagnosticPopup({
             transition={{ duration: 0.3, ease: 'easeOut' }}
             className="fixed bottom-6 right-6 z-50 max-w-sm w-full mx-4"
           >
-            <div className="bg-gradient-to-br from-yellow-500 to-orange-500 rounded-2xl shadow-2xl border border-yellow-400/30 overflow-hidden">
+            <div className="bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden">
               {/* Header */}
               <div className="p-4 pb-2">
                 <div className="flex items-start justify-between">
                   <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
-                      <LightBulbIcon className="w-6 h-6 text-white" />
+                    <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
+                      <LightBulbIcon className="w-6 h-6 text-gray-600" />
                     </div>
                     <div>
-                      <h3 className="text-white font-bold text-lg">💡 Ideia Estratégica!</h3>
-                      <p className="text-white/90 text-sm">Que tal fazer um diagnóstico estratégico agora?</p>
+                      <h3 className="text-black font-bold text-lg">💡 Ideia Estratégica!</h3>
+                      <p className="text-gray-700 text-sm">Que tal fazer um diagnóstico estratégico agora?</p>
                     </div>
                   </div>
                   <button
                     onClick={handleClose}
-                    className="text-white/70 hover:text-white transition-colors p-1"
+                    className="text-gray-500 hover:text-gray-700 transition-colors p-1"
                     aria-label="Fechar"
                   >
                     <XMarkIcon className="w-5 h-5" />
@@ -129,32 +129,20 @@ export default function DiagnosticPopup({
 
               {/* Content */}
               <div className="px-4 pb-4">
-                <div className="bg-white/10 rounded-lg p-3 mb-4">
-                  <div className="flex items-center space-x-2 text-white/90 text-sm">
-                    <ChartBarIcon className="w-4 h-4" />
-                    <span>Descubra como otimizar suas vendas B2B</span>
-                  </div>
-                </div>
 
                 <div className="space-y-3">
-                  <button
-                    onClick={handleAccept}
-                    className="w-full bg-white text-orange-600 font-semibold py-3 px-4 rounded-lg hover:bg-white/90 transition-colors duration-200 flex items-center justify-center space-x-2"
-                  >
-                    <span>🚀 Fazer Diagnóstico</span>
-                  </button>
                   
                   <button
                     onClick={handleClose}
-                    className="w-full text-white/80 hover:text-white transition-colors text-sm py-2"
+                    className="w-full text-gray-500 hover:text-gray-700 transition-colors text-sm py-2"
                   >
                     Talvez mais tarde
                   </button>
                 </div>
 
                 {/* Benefits */}
-                <div className="mt-4 pt-3 border-t border-white/20">
-                  <div className="grid grid-cols-2 gap-2 text-xs text-white/80">
+                <div className="mt-4 pt-3 border-t border-gray-200">
+                  <div className="grid grid-cols-2 gap-2 text-xs text-gray-600">
                     <div className="flex items-center space-x-1">
                       <span>✅</span>
                       <span>Gratuito</span>
@@ -177,10 +165,10 @@ export default function DiagnosticPopup({
 
               {/* Pulse animation */}
               <motion.div
-                className="absolute inset-0 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-2xl"
+                className="absolute inset-0 bg-gray-100 rounded-2xl"
                 animate={{ 
-                  scale: [1, 1.02, 1], 
-                  opacity: [0.3, 0.1, 0.3] 
+                  scale: [1, 1.01, 1], 
+                  opacity: [0.1, 0.05, 0.1] 
                 }}
                 transition={{ 
                   duration: 3, 

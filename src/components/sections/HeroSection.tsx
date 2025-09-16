@@ -193,13 +193,26 @@ export default function HeroSection() {
               }}
               whileHover={{ scale: 1.05, y: -3 }}
               whileTap={{ scale: 0.98 }}
-              className="group relative bg-gradient-to-r from-yellow-500 to-yellow-400 hover:from-yellow-400 hover:to-yellow-300 text-black font-bold text-base sm:text-lg lg:text-xl px-6 sm:px-8 lg:px-12 xl:px-16 py-3 sm:py-4 lg:py-5 rounded-lg sm:rounded-xl lg:rounded-2xl transition-all duration-300 flex items-center justify-center space-x-2 sm:space-x-3 lg:space-x-4 shadow-2xl hover:shadow-yellow-500/40 overflow-hidden cursor-pointer w-auto max-w-xs sm:max-w-sm lg:max-w-md whitespace-nowrap"
+              className="group relative bg-gradient-to-r from-yellow-500 to-yellow-400 hover:from-yellow-400 hover:to-yellow-300 text-black font-bold text-sm sm:text-lg lg:text-xl px-3 sm:px-10 lg:px-14 xl:px-18 py-2 sm:py-4 lg:py-5 rounded-xl sm:rounded-2xl lg:rounded-3xl transition-all duration-300 flex items-center justify-center space-x-2 sm:space-x-3 lg:space-x-4 shadow-xl hover:shadow-2xl hover:shadow-yellow-500/50 overflow-hidden cursor-pointer w-auto max-w-xs sm:max-w-sm lg:max-w-md whitespace-nowrap border border-yellow-300/20 hover:border-yellow-200/30"
             >
               <motion.div
                 className="absolute inset-0 bg-gradient-to-r from-yellow-300 to-yellow-200 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
               />
+              {/* Efeito de brilho sutil */}
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                animate={{
+                  x: ['-100%', '100%'],
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  repeatDelay: 3,
+                  ease: "easeInOut"
+                }}
+              />
               <span className="relative z-10">Implementar CRM Agora</span>
-              <ArrowRightIcon className="w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-2 transition-transform duration-300 relative z-10 flex-shrink-0" />
+              <ArrowRightIcon className="w-4 h-4 sm:w-6 sm:h-6 group-hover:translate-x-2 transition-transform duration-300 relative z-10 flex-shrink-0" />
             </motion.button>
           </motion.div>
 
