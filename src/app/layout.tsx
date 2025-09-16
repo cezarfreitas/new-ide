@@ -5,6 +5,7 @@ import ParticleBackground from "@/components/ui/ParticleBackground";
 import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 import MetaPixel from "@/components/analytics/MetaPixel";
 import StructuredData from "@/components/seo/StructuredData";
+import WhatsAppButton from "@/components/ui/WhatsAppButton";
 import { env } from "@/lib/env";
 
 const geistSans = Geist({
@@ -129,7 +130,6 @@ export default function RootLayout({
     <html lang="pt-BR" suppressHydrationWarning>
       <head>
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
         {gaMeasurementId && <GoogleAnalytics measurementId={gaMeasurementId} />}
         {metaPixelId && <MetaPixel pixelId={metaPixelId} />}
         <StructuredData type="organization" />
@@ -141,6 +141,15 @@ export default function RootLayout({
       >
         <ParticleBackground />
         {children}
+        <WhatsAppButton 
+          phoneNumber={process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "+5511989882867"}
+          message={process.env.NEXT_PUBLIC_WHATSAPP_MESSAGE || "Olá! Gostaria de saber mais sobre os serviços da IDE Negócios Digitais."}
+          position="bottom-right"
+          showOnScroll={false}
+          showDiagnosticBalloon={true}
+          diagnosticScrollThreshold={800}
+          diagnosticDelay={2000}
+        />
       </body>
     </html>
   );

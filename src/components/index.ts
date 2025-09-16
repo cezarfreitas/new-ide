@@ -1,6 +1,8 @@
 // UI Components
 export { default as Navigation } from './ui/Navigation';
 export { default as IDELogo } from './ui/IDELogo';
+export { default as WhatsAppButton } from './ui/WhatsAppButton';
+export { default as DiagnosticPopup } from './ui/DiagnosticPopup';
 
 // 3D Components
 export { default as HeroBackground3D } from './3d/HeroBackground3D';
