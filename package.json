@@ -6,7 +6,17 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "deploy": "bash scripts/deploy.sh",
+    "deploy:win": "powershell -ExecutionPolicy Bypass -File scripts/deploy.ps1",
+    "monitor": "bash scripts/monitor.sh",
+    "docker:build": "docker build -f Dockerfile.production -t ide-negocios-digitais:latest .",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "docker:restart": "docker-compose restart",
+    "analyze": "ANALYZE=true npm run build",
+    "health": "curl -f http://localhost:3000/api/health || echo 'Health check failed'"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.7",
