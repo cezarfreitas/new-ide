@@ -1,5 +1,7 @@
 'use client';
 
+import IDELogo from '@/components/ui/IDELogo';
+
 interface FooterSectionProps {
   companyInfo: {
     name: string;
@@ -23,9 +25,7 @@ export default function FooterSection({
         <div className="grid md:grid-cols-4 gap-8">
           <div>
             <div className="flex items-center space-x-2 mb-4">
-              <div className="w-8 h-8 bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-lg flex items-center justify-center">
-                <span className="text-black font-bold text-sm">IDE</span>
-              </div>
+              <IDELogo size="md" />
               <span className="text-xl font-bold">{companyInfo.name}</span>
             </div>
             <p className="text-gray-400 text-sm">
@@ -74,7 +74,7 @@ export default function FooterSection({
         </div>
         
         <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-          <p>&copy; 2024 {companyInfo.name}. Todos os direitos reservados.</p>
+          <p>&copy; {new Date().getFullYear()} {companyInfo.name}. Todos os direitos reservados.</p>
         </div>
       </div>
     </footer>

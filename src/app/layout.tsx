@@ -19,23 +19,31 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "IDE Negócios Digitais - CRM B2B, Vendas Digitais e Capacitação Comercial",
+    default: "IDE Negócios Digitais - CRM B2B Estratégico, Vendas Digitais e Capacitação Comercial | Suzano SP",
     template: "%s | IDE Negócios Digitais"
   },
-  description: "Transforme seu negócio em uma máquina de vendas com CRM B2B estratégico, vendas digitais otimizadas e capacitação comercial. Implementação em 30 dias com ROI garantido +50%.",
+  description: "Especialistas em CRM B2B estratégico, vendas digitais e capacitação comercial. Transformamos empresas B2B em máquinas de vendas eficientes com +50% de melhoria em vendas. Localizados em Suzano - SP.",
   keywords: [
-    "CRM B2B",
-    "vendas digitais",
+    "CRM B2B estratégico",
+    "vendas digitais B2B",
     "capacitação comercial",
     "automação comercial",
-    "pipeline de vendas",
+    "pipeline de vendas B2B",
     "leads qualificados",
-    "ROI vendas",
-    "consultoria CRM",
+    "melhoria em vendas",
+    "consultoria CRM B2B",
     "implementação CRM",
-    "vendas B2B",
+    "vendas B2B consultivas",
     "negócios digitais",
-    "marketing digital B2B"
+    "marketing digital B2B",
+    "funil de vendas B2B",
+    "métricas comerciais",
+    "prospecção digital",
+    "negociação avançada",
+    "performance comercial",
+    "Suzano SP",
+    "Grande São Paulo",
+    "consultoria empresarial"
   ],
   authors: [{ name: "IDE Negócios Digitais", url: "https://idenegociosdigitais.com.br" }],
   creator: "IDE Negócios Digitais",
@@ -50,8 +58,8 @@ export const metadata: Metadata = {
     canonical: '/',
   },
   openGraph: {
-    title: "IDE Negócios Digitais - CRM B2B, Vendas Digitais e Capacitação Comercial",
-    description: "Transforme seu negócio em uma máquina de vendas com CRM B2B estratégico, vendas digitais otimizadas e capacitação comercial. Implementação em 30 dias com ROI garantido +50%.",
+    title: "IDE Negócios Digitais - CRM B2B Estratégico, Vendas Digitais e Capacitação Comercial | Suzano SP",
+    description: "Especialistas em CRM B2B estratégico, vendas digitais e capacitação comercial. Transformamos empresas B2B em máquinas de vendas eficientes com +50% de melhoria em vendas. Localizados em Suzano - SP.",
     url: 'https://idenegociosdigitais.com.br',
     siteName: 'IDE Negócios Digitais',
     images: [
@@ -59,7 +67,7 @@ export const metadata: Metadata = {
         url: '/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'IDE Negócios Digitais - CRM B2B, Vendas Digitais e Capacitação Comercial',
+        alt: 'IDE Negócios Digitais - CRM B2B Estratégico, Vendas Digitais e Capacitação Comercial | Suzano SP',
         type: 'image/jpeg',
       },
     ],
@@ -69,8 +77,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: "IDE Negócios Digitais - CRM B2B, Vendas Digitais e Capacitação Comercial",
-    description: "Transforme seu negócio em uma máquina de vendas com CRM B2B estratégico, vendas digitais otimizadas e capacitação comercial.",
+    title: "IDE Negócios Digitais - CRM B2B Estratégico, Vendas Digitais e Capacitação Comercial | Suzano SP",
+    description: "Especialistas em CRM B2B estratégico, vendas digitais e capacitação comercial. Transformamos empresas B2B em máquinas de vendas eficientes com +50% de melhoria em vendas.",
     images: ['/og-image.jpg'],
     creator: '@idenegociosdigitais',
     site: '@idenegociosdigitais',
@@ -120,6 +128,8 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" suppressHydrationWarning>
       <head>
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
         {gaMeasurementId && <GoogleAnalytics measurementId={gaMeasurementId} />}
         {metaPixelId && <MetaPixel pixelId={metaPixelId} />}
         <StructuredData type="organization" />

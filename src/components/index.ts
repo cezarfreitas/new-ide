@@ -1,5 +1,6 @@
 // UI Components
 export { default as Navigation } from './ui/Navigation';
+export { default as IDELogo } from './ui/IDELogo';
 
 // 3D Components
 export { default as HeroBackground3D } from './3d/HeroBackground3D';

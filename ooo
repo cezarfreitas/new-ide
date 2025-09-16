@@ -1,0 +1,25 @@
+warning: in the working copy of 'src/app/layout.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/app/page.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/components/sections/ContactSection.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/components/sections/FooterSection.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/components/ui/MeetingModal.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/utils/data.ts', LF will be replaced by CRLF the next time Git touches it
+env.example
+src/app/api/products/route.ts
+src/app/layout.tsx
+src/app/manifest.ts
+src/app/page.tsx
+src/components/index.ts
+src/components/marketplace/ProductForm.tsx
+src/components/marketplace/ProductModal.tsx
+src/components/marketplace/ProductTable.tsx
+src/components/sections/ClientsSection.tsx
+src/components/sections/ContactSection.tsx
+src/components/sections/FooterSection.tsx
+src/components/sections/MarketplaceSection.tsx
+src/components/seo/StructuredData.tsx
+src/components/ui/MeetingModal.tsx
+src/types/marketplace.ts
+src/utils/aiAnalysis.ts
+src/utils/data.ts
+src/utils/sampleProducts.ts

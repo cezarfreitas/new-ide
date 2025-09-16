@@ -176,7 +176,7 @@ export default function MeetingModal({ isOpen, onClose }: MeetingModalProps) {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.8, y: 50 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="relative z-10 bg-black border border-yellow-500/30 rounded-2xl p-8 max-w-lg w-full max-h-[90vh] overflow-y-auto shadow-2xl shadow-yellow-500/10 mx-auto"
+            className="relative z-10 bg-black border border-yellow-500/30 rounded-xl p-6 max-w-md w-full max-h-[90vh] overflow-y-auto shadow-2xl shadow-yellow-500/10 mx-auto"
             style={{
               maxHeight: '90vh',
               margin: 'auto'
@@ -184,50 +184,50 @@ export default function MeetingModal({ isOpen, onClose }: MeetingModalProps) {
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
-            <div className="flex justify-between items-center mb-6">
+            <div className="flex justify-between items-center mb-4">
               <div>
-                <h2 className="text-2xl font-bold text-white">Agendar Reunião</h2>
-                <p className="text-gray-400 text-sm mt-1">Vamos conversar sobre seu projeto</p>
+                <h2 className="text-xl font-bold text-white">Agendar Reunião</h2>
+                <p className="text-gray-400 text-xs mt-1">Vamos conversar sobre seu projeto</p>
               </div>
               <button
                 onClick={onClose}
-                className="text-gray-400 hover:text-yellow-400 transition-colors p-2 cursor-pointer"
+                className="text-gray-400 hover:text-yellow-400 transition-colors p-1 cursor-pointer"
               >
-                <XMarkIcon className="w-6 h-6" />
+                <XMarkIcon className="w-5 h-5" />
               </button>
             </div>
 
             {/* Status Messages */}
             {submitStatus === 'success' && (
-              <div className="mb-6 p-4 bg-green-900/20 border border-green-500/30 rounded-lg">
+              <div className="mb-4 p-3 bg-green-900/20 border border-green-500/30 rounded-lg">
                 <div className="flex items-center space-x-2">
-                  <div className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center">
-                    <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  <div className="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
+                    <svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                     </svg>
                   </div>
-                  <p className="text-green-400 font-medium">Formulário enviado com sucesso!</p>
+                  <p className="text-green-400 text-sm font-medium">Enviado com sucesso!</p>
                 </div>
               </div>
             )}
 
             {submitStatus === 'error' && (
-              <div className="mb-6 p-4 bg-red-900/20 border border-red-500/30 rounded-lg">
+              <div className="mb-4 p-3 bg-red-900/20 border border-red-500/30 rounded-lg">
                 <div className="flex items-center space-x-2">
-                  <div className="w-5 h-5 bg-red-500 rounded-full flex items-center justify-center">
-                    <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  <div className="w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
+                    <svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
                     </svg>
                   </div>
-                  <p className="text-red-400 font-medium">Erro ao enviar formulário. Tente novamente.</p>
+                  <p className="text-red-400 text-sm font-medium">Erro ao enviar. Tente novamente.</p>
                 </div>
               </div>
             )}
 
             {/* Form */}
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-2">
+                <label htmlFor="name" className="block text-xs font-medium text-gray-300 mb-1">
                   Nome Completo *
                 </label>
                 <input
@@ -237,13 +237,13 @@ export default function MeetingModal({ isOpen, onClose }: MeetingModalProps) {
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition-colors"
+                  className="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition-colors text-sm"
                   placeholder="Seu nome completo"
                 />
               </div>
 
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
+                <label htmlFor="email" className="block text-xs font-medium text-gray-300 mb-1">
                   E-mail *
                 </label>
                 <input
@@ -253,13 +253,13 @@ export default function MeetingModal({ isOpen, onClose }: MeetingModalProps) {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition-colors"
+                  className="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition-colors text-sm"
                   placeholder="seu@email.com"
                 />
               </div>
 
               <div>
-                <label htmlFor="phone" className="block text-sm font-medium text-gray-300 mb-2">
+                <label htmlFor="phone" className="block text-xs font-medium text-gray-300 mb-1">
                   Telefone *
                 </label>
                 <input
@@ -269,13 +269,13 @@ export default function MeetingModal({ isOpen, onClose }: MeetingModalProps) {
                   value={formData.phone}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition-colors"
+                  className="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition-colors text-sm"
                   placeholder="(11) 99999-9999"
                 />
               </div>
 
               <div>
-                <label htmlFor="company" className="block text-sm font-medium text-gray-300 mb-2">
+                <label htmlFor="company" className="block text-xs font-medium text-gray-300 mb-1">
                   Empresa
                 </label>
                 <input
@@ -284,13 +284,13 @@ export default function MeetingModal({ isOpen, onClose }: MeetingModalProps) {
                   name="company"
                   value={formData.company}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition-colors"
+                  className="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition-colors text-sm"
                   placeholder="Nome da sua empresa"
                 />
               </div>
 
               <div>
-                <label htmlFor="message" className="block text-sm font-medium text-gray-300 mb-2">
+                <label htmlFor="message" className="block text-xs font-medium text-gray-300 mb-1">
                   Mensagem
                 </label>
                 <textarea
@@ -298,29 +298,29 @@ export default function MeetingModal({ isOpen, onClose }: MeetingModalProps) {
                   name="message"
                   value={formData.message}
                   onChange={handleChange}
-                  rows={4}
-                  className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition-colors resize-none"
-                  placeholder="Conte-nos sobre seu projeto ou necessidade..."
+                  rows={3}
+                  className="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition-colors resize-none text-sm"
+                  placeholder="Conte-nos sobre seu projeto..."
                 />
               </div>
 
-              <div className="flex gap-4 pt-4">
+              <div className="flex gap-3 pt-2">
                 <button
                   type="button"
                   onClick={onClose}
                   disabled={isSubmitting}
-                  className="flex-1 px-6 py-3 border border-gray-700 text-gray-300 rounded-lg hover:border-yellow-500 hover:text-yellow-400 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                  className="flex-1 px-4 py-2 border border-gray-700 text-gray-300 rounded-lg hover:border-yellow-500 hover:text-yellow-400 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer text-sm"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="flex-1 px-6 py-3 bg-gradient-to-r from-yellow-500 to-yellow-400 text-black rounded-lg hover:from-yellow-400 hover:to-yellow-300 transition-all font-semibold shadow-lg hover:shadow-yellow-500/25 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center"
+                  className="flex-1 px-4 py-2 bg-gradient-to-r from-yellow-500 to-yellow-400 text-black rounded-lg hover:from-yellow-400 hover:to-yellow-300 transition-all font-semibold shadow-lg hover:shadow-yellow-500/25 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center text-sm"
                 >
                   {isSubmitting ? (
                     <div className="flex items-center space-x-2">
-                      <div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
+                      <div className="w-3 h-3 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
                       <span>Enviando...</span>
                     </div>
                   ) : (
@@ -331,9 +331,9 @@ export default function MeetingModal({ isOpen, onClose }: MeetingModalProps) {
             </form>
 
             {/* Footer */}
-            <div className="mt-6 pt-6 border-t border-gray-800">
+            <div className="mt-4 pt-4 border-t border-gray-800">
               <p className="text-xs text-gray-500 text-center">
-                Seus dados estão seguros conosco. Não compartilhamos informações pessoais.
+                Seus dados estão seguros conosco.
               </p>
             </div>
           </motion.div>

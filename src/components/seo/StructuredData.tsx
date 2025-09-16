@@ -24,7 +24,7 @@ export default function StructuredData({ type = 'organization' }: StructuredData
     },
     "contactPoint": {
       "@type": "ContactPoint",
-      "telephone": "+55-11-99999-9999",
+      "telephone": "+55-11-98988-2867",
       "contactType": "customer service",
       "email": "contato@idenegociosdigitais.com.br",
       "availableLanguage": "Portuguese"
@@ -112,7 +112,7 @@ export default function StructuredData({ type = 'organization' }: StructuredData
       "name": "IDE Negócios Digitais",
       "contactPoint": {
         "@type": "ContactPoint",
-        "telephone": "+55-11-99999-9999",
+        "telephone": "+55-11-98988-2867",
         "contactType": "customer service",
         "email": "contato@idenegociosdigitais.com.br"
       }

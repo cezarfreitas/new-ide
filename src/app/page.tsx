@@ -3,7 +3,6 @@ import HeroSection from '@/components/sections/HeroSection';
 import ServicesSection from '@/components/sections/ServicesSection';
 import AboutSection from '@/components/sections/AboutSection';
 import ClientsSection from '@/components/sections/ClientsSection';
-import MarketplaceSection from '@/components/sections/MarketplaceSection';
 import ContactSection from '@/components/sections/ContactSection';
 import FooterSection from '@/components/sections/FooterSection';
 import LazySection from '@/components/ui/LazySection';
@@ -34,10 +33,6 @@ export default function Home() {
       
       <LazySection>
         <ClientsSection clients={clients} />
-      </LazySection>
-      
-      <LazySection>
-        <MarketplaceSection />
       </LazySection>
       
       <LazySection>

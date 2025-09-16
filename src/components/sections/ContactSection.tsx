@@ -117,7 +117,7 @@ export default function ContactSection() {
 
   return (
     <section id="contato" className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 bg-black">
-      <div className="max-w-4xl mx-auto text-center">
+      <div className="max-w-5xl mx-auto text-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -220,7 +220,7 @@ export default function ContactSection() {
             </div>
             <div className="text-center p-4 rounded-lg bg-black/50 border border-yellow-500/20">
               <h3 className="text-base sm:text-lg font-semibold text-white mb-2">Telefone</h3>
-              <p className="text-yellow-200 text-sm sm:text-base">(11) 9 9999-9999</p>
+              <p className="text-yellow-200 text-sm sm:text-base">+55 11 98988-2867</p>
             </div>
             <div className="text-center p-4 rounded-lg bg-black/50 border border-yellow-500/20 sm:col-span-2 lg:col-span-1">
               <h3 className="text-base sm:text-lg font-semibold text-white mb-2">Localização</h3>

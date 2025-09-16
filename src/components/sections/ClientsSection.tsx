@@ -4,7 +4,6 @@ import { motion } from 'framer-motion';
 
 interface Client {
   name: string;
-  industry: string;
 }
 
 interface ClientsSectionProps {
@@ -41,33 +40,10 @@ export default function ClientsSection({ clients }: ClientsSectionProps) {
               transition={{ duration: 0.8, delay: index * 0.1 }}
               className="bg-black p-6 rounded-lg text-center hover:bg-yellow-500/10 transition-all duration-300 border border-yellow-500/30 hover:border-yellow-500"
             >
-              <h3 className="text-lg font-semibold text-white mb-2">{client.name}</h3>
-              <p className="text-sm text-yellow-300">{client.industry}</p>
+              <h3 className="text-lg font-semibold text-white">{client.name}</h3>
             </motion.div>
           ))}
         </div>
-
-        {/* Testimonial Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="mt-16 bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-2xl p-8 text-black"
-        >
-          <div className="text-center">
-            <div className="flex justify-center mb-4">
-              {[...Array(5)].map((_, i) => (
-                <span key={i} className="text-2xl">★</span>
-              ))}
-            </div>
-            <blockquote className="text-lg font-medium mb-4 max-w-3xl mx-auto">
-              &ldquo;Em 4 meses tivemos CRM B2B funcionando adequadamente. A automação comercial melhorou nossa qualificação de leads e aumentou nossa conversão. ROI positivo no primeiro ano.&rdquo;
-            </blockquote>
-            <cite className="text-gray-800 font-semibold">
-              CEO - Empresa B2B que implementou CRM completo
-            </cite>
-          </div>
-        </motion.div>
       </div>
     </section>
   );

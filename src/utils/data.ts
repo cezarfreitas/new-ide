@@ -6,7 +6,6 @@ export const navigationItems: NavigationItem[] = [
   { label: 'Serviços', href: '#servicos' },
   { label: 'Sobre', href: '#sobre' },
   { label: 'Clientes', href: '#clientes' },
-  { label: 'Marketplace', href: '#marketplace' },
   { label: 'Contato', href: '#contato' }
 ];
 
@@ -48,7 +47,7 @@ export const companyInfo = {
   name: "IDE | Negócios Digitais",
   description: "Especialistas em CRM B2B, vendas digitais, automação comercial e capacitação de equipes. Transformamos empresas B2B em máquinas de vendas eficientes.",
   email: "contato@idenegociosdigitais.com.br",
-  phone: "(11) 9 9999-9999",
+  phone: "+55 11 98988-2867",
   address: "R. Gen. Francisco Glicério, 1833 - Sala 4, 1°andar - Centro, Suzano - SP, CEP: 08674-003"
 };
 
@@ -69,18 +68,24 @@ export const footerCompanyLinks = [
 
 // New data for clients section
 export const clients = [
-  { name: "Stance", industry: "Moda & Lifestyle" },
-  { name: "Vega Sports", industry: "Esportes" },
-  { name: "Mad Rats", industry: "Entretenimento" },
-  { name: "Brustec", industry: "Tecnologia" },
-  { name: "Grupo Inteli", industry: "Inteligência" },
-  { name: "Colégio Ícone", industry: "Educação" },
-  { name: "Completa Telecom", industry: "Telecomunicações" },
-  { name: "Grupo NTK", industry: "Corporativo" },
-  { name: "Movim Seguros", industry: "Seguros" },
-  { name: "Loja São Silvestre", industry: "Varejo" },
-  { name: "Hurley", industry: "Surf & Lifestyle" },
-  { name: "WG", industry: "Corporativo" }
+  { name: "Stance" },
+  { name: "Vega Sports" },
+  { name: "Mad Rats" },
+  { name: "Brustec" },
+  { name: "Grupo Inteli" },
+  { name: "Colégio Ícone" },
+  { name: "Completa Telecom" },
+  { name: "Grupo NTK" },
+  { name: "Movim Seguros" },
+  { name: "Loja São Silvestre" },
+  { name: "Hurley" },
+  { name: "WG" },
+  { name: "Tapout" },
+  { name: "Iron Star" },
+  { name: "Silver Star" },
+  { name: "Play Size" },
+  { name: "Conalgo" },
+  { name: "Tropical Brasil" }
 ];
 
 // Mission, Vision, Values
