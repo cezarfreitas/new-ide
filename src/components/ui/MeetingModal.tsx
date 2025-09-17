@@ -21,6 +21,7 @@ export default function MeetingModal({ isOpen, onClose }: MeetingModalProps) {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState<string>('');
   const { trackFormSubmission } = useAnalytics();
   const { trackLead, trackContact, trackFormSubmission: trackMetaFormSubmission } = useMetaPixel();
 
@@ -28,6 +29,7 @@ export default function MeetingModal({ isOpen, onClose }: MeetingModalProps) {
     e.preventDefault();
     setIsSubmitting(true);
     setSubmitStatus('idle');
+    setErrorMessage('');
 
     try {
       // Dados de marketing para envio
@@ -126,11 +128,30 @@ export default function MeetingModal({ isOpen, onClose }: MeetingModalProps) {
         const emailError = emailResponse.status === 'rejected' ? emailResponse.reason : 
           (emailResponse.status === 'fulfilled' ? `Email: ${emailResponse.value.status}` : 'Email: Erro desconhecido');
         
-        throw new Error(`Falha no envio: ${webhookError}, ${emailError}`);
+        // Mensagem de erro mais amigável
+        let errorMsg = 'Erro ao enviar solicitação. Tente novamente.';
+        
+        if (webhookResponse.status === 'rejected' && emailResponse.status === 'rejected') {
+          errorMsg = 'Serviços temporariamente indisponíveis. Tente novamente mais tarde.';
+        } else if (webhookResponse.status === 'rejected') {
+          errorMsg = 'Erro no sistema de contato. Tente novamente em alguns minutos.';
+        } else if (emailResponse.status === 'rejected') {
+          errorMsg = 'Erro no envio de email. Tente novamente.';
+        }
+        
+        setErrorMessage(errorMsg);
+        throw new Error(errorMsg);
       }
     } catch (error) {
       console.error('Erro ao enviar formulário:', error);
       setSubmitStatus('error');
+      
+      // Definir mensagem de erro se não foi definida anteriormente
+      if (!errorMessage) {
+        const errorMsg = error instanceof Error ? error.message : 'Erro de conexão. Verifique sua internet e tente novamente.';
+        setErrorMessage(errorMsg);
+      }
+      
       // Track failed form submission
       trackFormSubmission('contact_form', false);
       trackMetaFormSubmission('contact_form', false);
@@ -213,13 +234,18 @@ export default function MeetingModal({ isOpen, onClose }: MeetingModalProps) {
 
             {submitStatus === 'error' && (
               <div className="mb-4 p-3 bg-red-900/20 border border-red-500/30 rounded-lg">
-                <div className="flex items-center space-x-2">
-                  <div className="w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
+                <div className="flex items-start space-x-2">
+                  <div className="w-4 h-4 bg-red-500 rounded-full flex items-center justify-center mt-0.5">
                     <svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
                     </svg>
                   </div>
-                  <p className="text-red-400 text-sm font-medium">Erro ao enviar. Tente novamente.</p>
+                  <div>
+                    <p className="text-red-400 text-sm font-medium">Erro ao enviar solicitação</p>
+                    <p className="text-red-300 text-xs mt-1 opacity-90">
+                      {errorMessage || 'Tente novamente em alguns minutos.'}
+                    </p>
+                  </div>
                 </div>
               </div>
             )}

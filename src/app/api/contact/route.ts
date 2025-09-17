@@ -48,13 +48,37 @@ export async function POST(request: NextRequest) {
     });
     
   } catch (error) {
-    console.error('API Route Contact: Erro ao processar webhook:', error);
+    console.error('API Route Contact: Erro ao processar webhook:', {
+      error: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined,
+      timestamp: new Date().toISOString()
+    });
+    
+    // Mensagens de erro mais específicas
+    let errorMessage = 'Erro interno do servidor';
+    let statusCode = 500;
+    
+    if (error instanceof Error) {
+      if (error.message.includes('fetch')) {
+        errorMessage = 'Erro de conexão com o servidor externo';
+        statusCode = 503;
+      } else if (error.message.includes('JSON')) {
+        errorMessage = 'Erro ao processar dados';
+        statusCode = 400;
+      } else {
+        errorMessage = error.message;
+      }
+    }
     
     return NextResponse.json({
       success: false,
-      error: error instanceof Error ? error.message : 'Unknown error'
+      error: errorMessage,
+      details: {
+        timestamp: new Date().toISOString(),
+        type: 'contact_api_error'
+      }
     }, { 
-      status: 500,
+      status: statusCode,
       headers: {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Methods': 'POST, OPTIONS',

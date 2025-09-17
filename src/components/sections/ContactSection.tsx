@@ -15,6 +15,7 @@ export default function ContactSection() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState<string>('');
   const { trackFormSubmission } = useAnalytics();
   const { trackContact, trackFormSubmission: trackMetaFormSubmission } = useMetaPixel();
 
@@ -30,6 +31,7 @@ export default function ContactSection() {
     e.preventDefault();
     setIsSubmitting(true);
     setSubmitStatus('idle');
+    setErrorMessage('');
 
     try {
       // URL do webhook via API route (resolve CORS)
@@ -96,17 +98,80 @@ export default function ContactSection() {
           message: ''
         });
       } else {
-        const errorText = await response.text();
+        // Tentar fallback de email se webhook falhar
+        console.log('Webhook falhou, tentando fallback de email...');
+        
+        try {
+          const emailResponse = await fetch('/api/email', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+            },
+            body: JSON.stringify({
+              ...marketingData,
+              phone: marketingData.company, // Usar company como phone para o template de email
+              form_type: 'contact_form_fallback'
+            }),
+          });
+
+          if (emailResponse.ok) {
+            console.log('Fallback de email funcionou!');
+            setSubmitStatus('success');
+            // Track successful form submission
+            trackFormSubmission('contact_form', true);
+            trackContact();
+            trackMetaFormSubmission('contact_form', true);
+            
+            // Reset form
+            setFormData({
+              name: '',
+              email: '',
+              company: '',
+              message: ''
+            });
+            return; // Sair da função se email funcionou
+          } else {
+            console.error('Fallback de email também falhou');
+          }
+        } catch (emailError) {
+          console.error('Erro no fallback de email:', emailError);
+        }
+
+        // Se chegou aqui, ambos falharam
+        const errorData = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
         console.error('Erro do servidor de contato:', {
           status: response.status,
           statusText: response.statusText,
-          error: errorText
+          error: errorData
         });
-        throw new Error(`Erro ${response.status}: ${response.statusText}`);
+        
+        // Mensagens de erro específicas
+        let errorMsg = 'Erro ao enviar mensagem. Tente novamente.';
+        
+        if (response.status === 400) {
+          errorMsg = 'Dados inválidos. Verifique os campos preenchidos.';
+        } else if (response.status === 500) {
+          errorMsg = 'Erro interno do servidor. Tente novamente em alguns minutos.';
+        } else if (response.status === 503) {
+          errorMsg = 'Serviços temporariamente indisponíveis. Tente novamente mais tarde.';
+        } else if (errorData.error) {
+          errorMsg = errorData.error;
+        }
+        
+        setErrorMessage(errorMsg);
+        throw new Error(errorMsg);
       }
     } catch (error) {
       console.error('Erro ao enviar formulário de contato:', error);
       setSubmitStatus('error');
+      
+      // Definir mensagem de erro se não foi definida anteriormente
+      if (!errorMessage) {
+        const errorMsg = error instanceof Error ? error.message : 'Erro de conexão. Verifique sua internet e tente novamente.';
+        setErrorMessage(errorMsg);
+      }
+      
       // Track failed form submission
       trackFormSubmission('contact_form', false);
       trackMetaFormSubmission('contact_form', false);
@@ -201,7 +266,15 @@ export default function ContactSection() {
                   animate={{ opacity: 1, y: 0 }}
                   className="mt-4 p-3 sm:p-4 bg-red-500/20 border border-red-500/50 rounded-lg text-red-400 text-sm sm:text-base"
                 >
-                  ❌ Erro ao enviar mensagem. Tente novamente ou entre em contato diretamente.
+                  <div className="flex items-start space-x-2">
+                    <span className="text-red-400">❌</span>
+                    <div>
+                      <p className="font-medium">Erro ao enviar mensagem</p>
+                      <p className="text-xs mt-1 opacity-90">
+                        {errorMessage || 'Tente novamente em alguns minutos.'}
+                      </p>
+                    </div>
+                  </div>
                 </motion.div>
               )}
             </form>

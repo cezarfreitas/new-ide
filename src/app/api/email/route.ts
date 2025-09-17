@@ -243,12 +243,40 @@ export async function POST(request: NextRequest) {
     });
     
   } catch (error) {
-    console.error('API Route Email: Erro ao enviar email:', error);
+    console.error('API Route Email: Erro ao enviar email:', {
+      error: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined,
+      timestamp: new Date().toISOString(),
+      body: body
+    });
+    
+    // Mensagens de erro mais específicas
+    let errorMessage = 'Erro ao enviar email';
+    let statusCode = 500;
+    
+    if (error instanceof Error) {
+      if (error.message.includes('EAUTH')) {
+        errorMessage = 'Erro de autenticação SMTP. Verifique as credenciais.';
+        statusCode = 401;
+      } else if (error.message.includes('ECONNECTION')) {
+        errorMessage = 'Erro de conexão SMTP. Verifique as configurações.';
+        statusCode = 503;
+      } else if (error.message.includes('ETIMEDOUT')) {
+        errorMessage = 'Timeout de conexão SMTP. Tente novamente.';
+        statusCode = 504;
+      } else {
+        errorMessage = error.message;
+      }
+    }
     
     return NextResponse.json({
       success: false,
-      error: error instanceof Error ? error.message : 'Erro desconhecido ao enviar email'
-    }, { status: 500 });
+      error: errorMessage,
+      details: {
+        timestamp: new Date().toISOString(),
+        type: 'email_api_error'
+      }
+    }, { status: statusCode });
   }
 }
 
