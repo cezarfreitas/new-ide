@@ -19,48 +19,50 @@ export default function Navigation({ items }: NavigationProps) {
   const { trackButtonClick: trackMetaButtonClick } = useMetaPixel();
 
   const handleNavClick = (href: string) => {
-    console.log('Navigating to:', href);
     setIsMenuOpen(false);
     
-    // Wait for menu animation to complete, then scroll
-    setTimeout(() => {
+    // Force scroll to element with multiple attempts
+    const scrollToElement = () => {
       const element = document.querySelector(href);
-      console.log('Element found:', element);
       
       if (element) {
-        // Get the header height to offset the scroll
         const headerHeight = 80;
         const elementPosition = (element as HTMLElement).offsetTop - headerHeight;
-        console.log('Scrolling to position:', elementPosition);
         
-        // Use requestAnimationFrame for better performance
-        requestAnimationFrame(() => {
-          window.scrollTo({
-            top: Math.max(0, elementPosition),
-            behavior: 'smooth'
-          });
+        window.scrollTo({
+          top: Math.max(0, elementPosition),
+          behavior: 'smooth'
         });
+        return true;
       } else {
         // Fallback: try to find element by ID without #
         const id = href.replace('#', '');
         const fallbackElement = document.getElementById(id);
-        console.log('Fallback element found:', fallbackElement);
         
         if (fallbackElement) {
           const headerHeight = 80;
           const elementPosition = fallbackElement.offsetTop - headerHeight;
           
-          requestAnimationFrame(() => {
-            window.scrollTo({
-              top: Math.max(0, elementPosition),
-              behavior: 'smooth'
-            });
+          window.scrollTo({
+            top: Math.max(0, elementPosition),
+            behavior: 'smooth'
           });
-        } else {
-          console.error('Element not found:', href);
+          return true;
         }
       }
-    }, 300); // Increased timeout for mobile
+      return false;
+    };
+
+    // Try immediate scroll
+    if (scrollToElement()) return;
+    
+    // If not found, try with delays to allow lazy loading
+    const attempts = [100, 300, 600, 1000];
+    attempts.forEach(delay => {
+      setTimeout(() => {
+        scrollToElement();
+      }, delay);
+    });
   };
 
   return (

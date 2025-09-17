@@ -5,7 +5,6 @@ import AboutSection from '@/components/sections/AboutSection';
 import ClientsSection from '@/components/sections/ClientsSection';
 import ContactSection from '@/components/sections/ContactSection';
 import FooterSection from '@/components/sections/FooterSection';
-import LazySection from '@/components/ui/LazySection';
 import { 
   navigationItems, 
   services, 
@@ -23,21 +22,10 @@ export default function Home() {
       <Navigation items={navigationItems} />
       <HeroSection />
       
-      <LazySection>
-        <ServicesSection services={services} />
-      </LazySection>
-      
-      <LazySection>
-        <AboutSection features={features} statistics={statistics} />
-      </LazySection>
-      
-      <LazySection>
-        <ClientsSection clients={clients} />
-      </LazySection>
-      
-      <LazySection>
-        <ContactSection />
-      </LazySection>
+      <ServicesSection services={services} />
+      <AboutSection features={features} statistics={statistics} />
+      <ClientsSection clients={clients} />
+      <ContactSection />
       
       <FooterSection 
         companyInfo={companyInfo}
