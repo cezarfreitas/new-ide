@@ -23,7 +23,6 @@ export async function POST(request: NextRequest) {
         },
         body: JSON.stringify({
           ...body,
-          phone: body.company || 'Não informado',
           form_type: 'contact_form'
         }),
       });

@@ -5,26 +5,45 @@ import { useState } from 'react';
 import { ContactForm } from '@/types';
 import { useAnalytics } from '@/hooks/useAnalytics';
 import { useMetaPixel } from '@/hooks/useMetaPixel';
+import { validatePhone, validateEmail, validateName, validateMessage, phoneMask } from '@/utils/validation';
 
 export default function ContactSection() {
   const [formData, setFormData] = useState<ContactForm>({
     name: '',
     email: '',
-    company: '', // Este campo é na verdade o telefone
+    phone: '',
+    company: '',
     message: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const [validationErrors, setValidationErrors] = useState<{[key: string]: string}>({});
   const { trackFormSubmission } = useAnalytics();
   const { trackContact, trackFormSubmission: trackMetaFormSubmission } = useMetaPixel();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
+    
+    let processedValue = value;
+    
+    // Aplicar máscara de telefone
+    if (name === 'phone') {
+      processedValue = phoneMask(value);
+    }
+    
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: processedValue
     }));
+    
+    // Limpar erro de validação quando usuário digita
+    if (validationErrors[name]) {
+      setValidationErrors(prev => ({
+        ...prev,
+        [name]: ''
+      }));
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -32,6 +51,36 @@ export default function ContactSection() {
     setIsSubmitting(true);
     setSubmitStatus('idle');
     setErrorMessage('');
+    setValidationErrors({});
+
+    // Validar campos obrigatórios
+    const errors: {[key: string]: string} = {};
+    
+    const nameValidation = validateName(formData.name);
+    if (!nameValidation.isValid) {
+      errors.name = nameValidation.message || 'Nome inválido';
+    }
+    
+    const emailValidation = validateEmail(formData.email);
+    if (!emailValidation.isValid) {
+      errors.email = emailValidation.message || 'Email inválido';
+    }
+    
+    const phoneValidation = validatePhone(formData.phone);
+    if (!phoneValidation.isValid) {
+      errors.phone = phoneValidation.message || 'Telefone inválido';
+    }
+    
+    const messageValidation = validateMessage(formData.message);
+    if (!messageValidation.isValid) {
+      errors.message = messageValidation.message || 'Mensagem inválida';
+    }
+    
+    if (Object.keys(errors).length > 0) {
+      setValidationErrors(errors);
+      setIsSubmitting(false);
+      return;
+    }
 
     try {
       // URL do webhook via API route (resolve CORS)
@@ -94,6 +143,7 @@ export default function ContactSection() {
         setFormData({
           name: '',
           email: '',
+          phone: '',
           company: '',
           message: ''
         });
@@ -110,7 +160,6 @@ export default function ContactSection() {
             },
             body: JSON.stringify({
               ...marketingData,
-              phone: marketingData.company || 'Não informado', // Campo company é na verdade o telefone
               form_type: 'contact_form_fallback'
             }),
           });
@@ -127,6 +176,7 @@ export default function ContactSection() {
             setFormData({
               name: '',
               email: '',
+              phone: '',
               company: '',
               message: ''
             });
@@ -208,8 +258,13 @@ export default function ContactSection() {
                   value={formData.name}
                   onChange={handleInputChange}
                   required
-                  className="w-full px-4 py-3 sm:py-4 rounded-lg border border-yellow-500/50 bg-black text-white placeholder-yellow-300/70 focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 text-base"
+                  className={`w-full px-4 py-3 sm:py-4 rounded-lg border bg-black text-white placeholder-yellow-300/70 focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 text-base ${
+                    validationErrors.name ? 'border-red-500' : 'border-yellow-500/50'
+                  }`}
                 />
+                {validationErrors.name && (
+                  <p className="text-red-400 text-sm mt-1">{validationErrors.name}</p>
+                )}
                 <input
                   type="email"
                   name="email"
@@ -217,13 +272,32 @@ export default function ContactSection() {
                   value={formData.email}
                   onChange={handleInputChange}
                   required
-                  className="w-full px-4 py-3 sm:py-4 rounded-lg border border-yellow-500/50 bg-black text-white placeholder-yellow-300/70 focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 text-base"
+                  className={`w-full px-4 py-3 sm:py-4 rounded-lg border bg-black text-white placeholder-yellow-300/70 focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 text-base ${
+                    validationErrors.email ? 'border-red-500' : 'border-yellow-500/50'
+                  }`}
                 />
+                {validationErrors.email && (
+                  <p className="text-red-400 text-sm mt-1">{validationErrors.email}</p>
+                )}
               </div>
               <input
                 type="tel"
-                name="company"
+                name="phone"
                 placeholder="Telefone (11) 99999-9999"
+                value={formData.phone}
+                onChange={handleInputChange}
+                className={`w-full px-4 py-3 sm:py-4 rounded-lg border bg-black text-white placeholder-yellow-300/70 focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 text-base ${
+                  validationErrors.phone ? 'border-red-500' : 'border-yellow-500/50'
+                }`}
+                required
+              />
+              {validationErrors.phone && (
+                <p className="text-red-400 text-sm mt-1">{validationErrors.phone}</p>
+              )}
+              <input
+                type="text"
+                name="company"
+                placeholder="Empresa (opcional)"
                 value={formData.company}
                 onChange={handleInputChange}
                 className="w-full px-4 py-3 sm:py-4 rounded-lg border border-yellow-500/50 bg-black text-white placeholder-yellow-300/70 focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 text-base"
@@ -235,8 +309,13 @@ export default function ContactSection() {
                 value={formData.message}
                 onChange={handleInputChange}
                 required
-                className="w-full px-4 py-3 sm:py-4 rounded-lg border border-yellow-500/50 bg-black text-white placeholder-yellow-300/70 focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 text-base resize-none"
+                className={`w-full px-4 py-3 sm:py-4 rounded-lg border bg-black text-white placeholder-yellow-300/70 focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 text-base resize-none ${
+                  validationErrors.message ? 'border-red-500' : 'border-yellow-500/50'
+                }`}
               />
+              {validationErrors.message && (
+                <p className="text-red-400 text-sm mt-1">{validationErrors.message}</p>
+              )}
               <button
                 type="submit"
                 disabled={isSubmitting}

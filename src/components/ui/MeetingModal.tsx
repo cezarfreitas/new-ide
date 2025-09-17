@@ -5,6 +5,7 @@ import { XMarkIcon } from '@heroicons/react/24/outline';
 import { useState } from 'react';
 import { useAnalytics } from '@/hooks/useAnalytics';
 import { useMetaPixel } from '@/hooks/useMetaPixel';
+import { validatePhone, validateEmail, validateName, validateMessage, phoneMask } from '@/utils/validation';
 
 interface MeetingModalProps {
   isOpen: boolean;
@@ -22,6 +23,7 @@ export default function MeetingModal({ isOpen, onClose }: MeetingModalProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const [validationErrors, setValidationErrors] = useState<{[key: string]: string}>({});
   const { trackFormSubmission } = useAnalytics();
   const { trackLead, trackContact, trackFormSubmission: trackMetaFormSubmission } = useMetaPixel();
 
@@ -30,6 +32,36 @@ export default function MeetingModal({ isOpen, onClose }: MeetingModalProps) {
     setIsSubmitting(true);
     setSubmitStatus('idle');
     setErrorMessage('');
+    setValidationErrors({});
+
+    // Validar campos obrigatórios
+    const errors: {[key: string]: string} = {};
+    
+    const nameValidation = validateName(formData.name);
+    if (!nameValidation.isValid) {
+      errors.name = nameValidation.message || 'Nome inválido';
+    }
+    
+    const emailValidation = validateEmail(formData.email);
+    if (!emailValidation.isValid) {
+      errors.email = emailValidation.message || 'Email inválido';
+    }
+    
+    const phoneValidation = validatePhone(formData.phone);
+    if (!phoneValidation.isValid) {
+      errors.phone = phoneValidation.message || 'Telefone inválido';
+    }
+    
+    const messageValidation = validateMessage(formData.message);
+    if (!messageValidation.isValid) {
+      errors.message = messageValidation.message || 'Mensagem inválida';
+    }
+    
+    if (Object.keys(errors).length > 0) {
+      setValidationErrors(errors);
+      setIsSubmitting(false);
+      return;
+    }
 
     try {
       // Dados de marketing para envio
@@ -161,10 +193,27 @@ export default function MeetingModal({ isOpen, onClose }: MeetingModalProps) {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    
+    let processedValue = value;
+    
+    // Aplicar máscara de telefone
+    if (name === 'phone') {
+      processedValue = phoneMask(value);
+    }
+    
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [name]: processedValue
     });
+    
+    // Limpar erro de validação quando usuário digita
+    if (validationErrors[name]) {
+      setValidationErrors(prev => ({
+        ...prev,
+        [name]: ''
+      }));
+    }
   };
 
   return (

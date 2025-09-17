@@ -8,6 +8,7 @@ export interface Service {
 export interface ContactForm {
   name: string;
   email: string;
+  phone: string;
   company: string;
   message: string;
 }
