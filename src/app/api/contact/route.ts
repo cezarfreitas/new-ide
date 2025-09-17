@@ -10,42 +10,45 @@ export async function POST(request: NextRequest) {
     // Log dos dados recebidos
     console.log('API Route Contact: Dados recebidos:', body);
     
-    // Fazer a requisição para o webhook externo
-    const response = await fetch('https://api.idenegociosdigitais.com.br/webhook/ide-contato', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-      body: JSON.stringify(body),
-    });
-
-    // Log da resposta do webhook
-    console.log('API Route Contact: Resposta do webhook:', {
-      status: response.status,
-      statusText: response.statusText,
-      ok: response.ok
-    });
-
-    const responseText = await response.text();
+    // TEMPORÁRIO: Sempre usar email como fallback para garantir funcionamento
+    console.log('API Route Contact: Usando email como método principal (temporário)');
     
-    // Log do conteúdo da resposta
-    console.log('API Route Contact: Conteúdo da resposta:', responseText);
-
-    // Retornar resposta para o frontend
-    return NextResponse.json({
-      success: response.ok,
-      status: response.status,
-      statusText: response.statusText,
-      data: responseText
-    }, { 
-      status: response.ok ? 200 : response.status,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'POST, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type, Accept',
+    try {
+      // Enviar via email diretamente
+      const emailResponse = await fetch('http://localhost:3000/api/email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+          ...body,
+          phone: body.company || 'Não informado',
+          form_type: 'contact_form'
+        }),
+      });
+      
+      if (emailResponse.ok) {
+        console.log('API Route Contact: Email enviado com sucesso!');
+        return NextResponse.json({
+          success: true,
+          message: 'Formulário enviado com sucesso via email!',
+          method: 'email'
+        }, { 
+          status: 200,
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'POST, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type, Accept',
+          }
+        });
+      } else {
+        throw new Error(`Email falhou com status ${emailResponse.status}`);
       }
-    });
+    } catch (emailError) {
+      console.error('API Route Contact: Erro no email:', emailError);
+      throw emailError;
+    }
     
   } catch (error) {
     console.error('API Route Contact: Erro ao processar webhook:', {

@@ -10,7 +10,7 @@ export default function ContactSection() {
   const [formData, setFormData] = useState<ContactForm>({
     name: '',
     email: '',
-    company: '',
+    company: '', // Este campo é na verdade o telefone
     message: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -110,7 +110,7 @@ export default function ContactSection() {
             },
             body: JSON.stringify({
               ...marketingData,
-              phone: marketingData.company || 'Não informado', // Usar company como phone para o template de email
+              phone: marketingData.company || 'Não informado', // Campo company é na verdade o telefone
               form_type: 'contact_form_fallback'
             }),
           });
