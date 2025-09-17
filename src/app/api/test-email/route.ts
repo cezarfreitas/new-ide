@@ -1,0 +1,112 @@
+import { NextRequest, NextResponse } from 'next/server';
+import nodemailer from 'nodemailer';
+
+export async function POST(request: NextRequest) {
+  try {
+    const {
+      smtpHost,
+      smtpPort,
+      smtpUser,
+      smtpPass,
+      smtpSecure,
+      to,
+      subject,
+      message
+    } = await request.json();
+
+    // Validação dos dados
+    if (!smtpHost || !smtpPort || !smtpUser || !smtpPass || !to || !subject || !message) {
+      return NextResponse.json(
+        { error: 'Todos os campos são obrigatórios' },
+        { status: 400 }
+      );
+    }
+
+    // Configuração do transporter SMTP
+    const transporter = nodemailer.createTransporter({
+      host: smtpHost,
+      port: parseInt(smtpPort),
+      secure: smtpSecure, // true para porta 465, false para outras portas
+      auth: {
+        user: smtpUser,
+        pass: smtpPass,
+      },
+      // Configurações adicionais para melhor compatibilidade
+      tls: {
+        rejectUnauthorized: false
+      }
+    });
+
+    // Verificar conexão SMTP
+    await transporter.verify();
+
+    // Configuração do email
+    const mailOptions = {
+      from: smtpUser,
+      to: to,
+      subject: subject,
+      text: message,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <div style="background: linear-gradient(135deg, #fbbf24, #f59e0b); padding: 20px; border-radius: 10px 10px 0 0;">
+            <h1 style="color: #000; margin: 0; text-align: center;">
+              🚀 IDE Negócios Digitais
+            </h1>
+          </div>
+          <div style="background: #f9fafb; padding: 30px; border-radius: 0 0 10px 10px;">
+            <h2 style="color: #374151; margin-top: 0;">
+              ${subject}
+            </h2>
+            <div style="color: #6b7280; line-height: 1.6; white-space: pre-line;">
+              ${message}
+            </div>
+            <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 20px 0;">
+            <p style="color: #9ca3af; font-size: 14px; margin: 0;">
+              Este email foi enviado via sistema de teste SMTP da IDE Negócios Digitais.
+            </p>
+          </div>
+        </div>
+      `
+    };
+
+    // Enviar email
+    const info = await transporter.sendMail(mailOptions);
+
+    return NextResponse.json({
+      success: true,
+      message: 'Email enviado com sucesso!',
+      messageId: info.messageId,
+      details: {
+        from: mailOptions.from,
+        to: mailOptions.to,
+        subject: mailOptions.subject,
+        timestamp: new Date().toISOString()
+      }
+    });
+
+  } catch (error: any) {
+    console.error('Erro ao enviar email:', error);
+    
+    // Tratar diferentes tipos de erro
+    let errorMessage = 'Erro desconhecido ao enviar email';
+    
+    if (error.code === 'EAUTH') {
+      errorMessage = 'Erro de autenticação. Verifique usuário e senha.';
+    } else if (error.code === 'ECONNECTION') {
+      errorMessage = 'Erro de conexão. Verifique host e porta SMTP.';
+    } else if (error.code === 'ETIMEDOUT') {
+      errorMessage = 'Timeout de conexão. Verifique as configurações de rede.';
+    } else if (error.message) {
+      errorMessage = error.message;
+    }
+
+    return NextResponse.json(
+      { 
+        error: errorMessage,
+        code: error.code || 'UNKNOWN_ERROR'
+      },
+      { status: 500 }
+    );
+  }
+}
+
