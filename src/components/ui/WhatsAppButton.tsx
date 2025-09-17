@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import Tooltip from './Tooltip';
+// import Tooltip from './Tooltip';
 
 interface WhatsAppButtonProps {
   phoneNumber?: string;
@@ -26,7 +26,7 @@ export default function WhatsAppButton({
   diagnosticDelay = 2000
 }: WhatsAppButtonProps) {
   const [isVisible, setIsVisible] = useState(!showOnScroll);
-  const [isHovered, setIsHovered] = useState(false);
+  // const [isHovered, setIsHovered] = useState(false);
   const [showDiagnostic, setShowDiagnostic] = useState(false);
   const [hasShownDiagnostic, setHasShownDiagnostic] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -119,32 +119,32 @@ export default function WhatsAppButton({
     }
   };
 
-  const handleDiagnosticAccept = () => {
-    setShowDiagnostic(false);
-    
-    // Analytics tracking
-    if (typeof window !== 'undefined' && window.gtag) {
-      window.gtag('event', 'diagnostic_balloon_accept', {
-        event_category: 'engagement',
-        event_label: 'whatsapp_balloon',
-        value: 1
-      });
-    }
+  // const handleDiagnosticAccept = () => {
+  //   setShowDiagnostic(false);
+  //   
+  //   // Analytics tracking
+  //   if (typeof window !== 'undefined' && window.gtag) {
+  //     window.gtag('event', 'diagnostic_balloon_accept', {
+  //       event_category: 'engagement',
+  //       event_label: 'whatsapp_balloon',
+  //       value: 1
+  //     });
+  //   }
 
-    // Meta Pixel tracking
-    if (typeof window !== 'undefined' && window.fbq) {
-      window.fbq('track', 'Lead', {
-        content_name: 'Diagnóstico Estratégico - WhatsApp Balloon',
-        content_category: 'engagement'
-      });
-    }
+  //   // Meta Pixel tracking
+  //   if (typeof window !== 'undefined' && window.fbq) {
+  //     window.fbq('track', 'Lead', {
+  //       content_name: 'Diagnóstico Estratégico - WhatsApp Balloon',
+  //       content_category: 'engagement'
+  //     });
+  //   }
 
-    // Scroll para a seção de contato
-    const contactSection = document.getElementById('contato');
-    if (contactSection) {
-      contactSection.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
+  //   // Scroll para a seção de contato
+  //   const contactSection = document.getElementById('contato');
+  //   if (contactSection) {
+  //     contactSection.scrollIntoView({ behavior: 'smooth' });
+  //   }
+  // };
 
   const handleDiagnosticClose = () => {
     setShowDiagnostic(false);
@@ -197,8 +197,8 @@ export default function WhatsAppButton({
             target="_blank"
             rel="noopener noreferrer"
             onClick={handleClick}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
+            // onMouseEnter={() => setIsHovered(true)}
+            // onMouseLeave={() => setIsHovered(false)}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
             animate={{ 

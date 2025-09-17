@@ -155,10 +155,10 @@ export default function MeetingModal({ isOpen, onClose }: MeetingModalProps) {
         }, 2000);
       } else {
         // Se ambos falharam, mostrar erro
-        const webhookError = webhookResponse.status === 'rejected' ? webhookResponse.reason : 
-          (webhookResponse.status === 'fulfilled' ? `Webhook: ${webhookResponse.value.status}` : 'Webhook: Erro desconhecido');
-        const emailError = emailResponse.status === 'rejected' ? emailResponse.reason : 
-          (emailResponse.status === 'fulfilled' ? `Email: ${emailResponse.value.status}` : 'Email: Erro desconhecido');
+        // const webhookError = webhookResponse.status === 'rejected' ? webhookResponse.reason : 
+        //   (webhookResponse.status === 'fulfilled' ? `Webhook: ${webhookResponse.value.status}` : 'Webhook: Erro desconhecido');
+        // const emailError = emailResponse.status === 'rejected' ? emailResponse.reason : 
+        //   (emailResponse.status === 'fulfilled' ? `Email: ${emailResponse.value.status}` : 'Email: Erro desconhecido');
         
         // Mensagem de erro mais amigável
         let errorMsg = 'Erro ao enviar solicitação. Tente novamente.';

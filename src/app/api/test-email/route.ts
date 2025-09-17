@@ -98,46 +98,47 @@ export async function POST(request: NextRequest) {
       }
     });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     // Log detalhado do erro
+    const errorObj = error as Record<string, unknown>;
     console.error('❌ Erro ao enviar email:', {
-      code: error.code,
-      message: error.message,
-      command: error.command,
-      response: error.response,
-      responseCode: error.responseCode,
-      stack: error.stack
+      code: errorObj.code,
+      message: errorObj.message,
+      command: errorObj.command,
+      response: errorObj.response,
+      responseCode: errorObj.responseCode,
+      stack: errorObj.stack
     });
     
     // Tratar diferentes tipos de erro
     let errorMessage = 'Erro desconhecido ao enviar email';
-    let errorDetails = {};
+    let errorDetails: Record<string, unknown> = {};
     
-    if (error.code === 'EAUTH') {
+    if (errorObj.code === 'EAUTH') {
       errorMessage = 'Erro de autenticação. Verifique usuário e senha.';
       errorDetails = { suggestion: 'Para Gmail, use App Password em vez da senha normal' };
-    } else if (error.code === 'ECONNECTION') {
+    } else if (errorObj.code === 'ECONNECTION') {
       errorMessage = 'Erro de conexão. Verifique host e porta SMTP.';
       errorDetails = { suggestion: 'Verifique se o host e porta estão corretos' };
-    } else if (error.code === 'ETIMEDOUT') {
+    } else if (errorObj.code === 'ETIMEDOUT') {
       errorMessage = 'Timeout de conexão. Verifique as configurações de rede.';
       errorDetails = { suggestion: 'Verifique sua conexão com a internet' };
-    } else if (error.code === 'EENVELOPE') {
+    } else if (errorObj.code === 'EENVELOPE') {
       errorMessage = 'Erro no envelope do email. Verifique os endereços.';
       errorDetails = { suggestion: 'Verifique se os emails estão no formato correto' };
-    } else if (error.message) {
-      errorMessage = error.message;
+    } else if (errorObj.message) {
+      errorMessage = String(errorObj.message);
     }
 
     return NextResponse.json(
       { 
         error: errorMessage,
-        code: error.code || 'UNKNOWN_ERROR',
+        code: errorObj.code || 'UNKNOWN_ERROR',
         details: {
           ...errorDetails,
-          command: error.command,
-          response: error.response,
-          responseCode: error.responseCode,
+          command: errorObj.command,
+          response: errorObj.response,
+          responseCode: errorObj.responseCode,
           timestamp: new Date().toISOString()
         }
       },

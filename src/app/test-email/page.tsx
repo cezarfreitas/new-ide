@@ -18,13 +18,13 @@ export default function TestEmailPage() {
   });
 
   const [isLoading, setIsLoading] = useState(false);
-  const [result, setResult] = useState<{ success: boolean; message: string; details?: any } | null>(null);
+  const [result, setResult] = useState<{ success: boolean; message: string; details?: Record<string, unknown> } | null>(null);
   const [emailHistory, setEmailHistory] = useState<Array<{
     id: string;
     timestamp: string;
     success: boolean;
     message: string;
-    details: any;
+    details: Record<string, unknown>;
   }>>([]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -277,7 +277,7 @@ export default function TestEmailPage() {
                             <div className="flex justify-between">
                               <span className="text-gray-400">Message ID:</span>
                               <span className="text-green-300 font-mono text-xs">
-                                {result.details.messageId}
+                                {String(result.details.messageId)}
                               </span>
                             </div>
                           )}
@@ -285,7 +285,7 @@ export default function TestEmailPage() {
                             <div className="flex justify-between">
                               <span className="text-gray-400">SMTP Response:</span>
                               <span className="text-green-300 font-mono text-xs">
-                                {result.details.smtpResponse}
+                                {String(result.details.smtpResponse)}
                               </span>
                             </div>
                           )}
@@ -293,7 +293,7 @@ export default function TestEmailPage() {
                             <div className="flex justify-between">
                               <span className="text-gray-400">Timestamp:</span>
                               <span className="text-gray-300">
-                                {new Date(result.details.timestamp).toLocaleString('pt-BR')}
+                                {new Date(String(result.details.timestamp)).toLocaleString('pt-BR')}
                               </span>
                             </div>
                           )}
@@ -304,14 +304,14 @@ export default function TestEmailPage() {
                             <div className="flex justify-between">
                               <span className="text-gray-400">Código do Erro:</span>
                               <span className="text-red-300 font-mono">
-                                {result.details.code}
+                                {String(result.details.code)}
                               </span>
                             </div>
                           )}
                           {result.details.suggestion && (
                             <div className="mt-2 p-2 bg-blue-900/30 rounded border border-blue-500/50">
                               <span className="text-blue-300 text-xs">
-                                💡 {result.details.suggestion}
+                                💡 {String(result.details.suggestion)}
                               </span>
                             </div>
                           )}
@@ -320,7 +320,7 @@ export default function TestEmailPage() {
                               <span className="text-gray-400 text-xs">Resposta do servidor:</span>
                               <div className="bg-gray-900 p-2 rounded mt-1">
                                 <code className="text-red-300 text-xs">
-                                  {result.details.response}
+                                  {String(result.details.response)}
                                 </code>
                               </div>
                             </div>

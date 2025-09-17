@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { XMarkIcon, ChartBarIcon, LightBulbIcon } from '@heroicons/react/24/outline';
+import { XMarkIcon, LightBulbIcon } from '@heroicons/react/24/outline';
 
 interface DiagnosticPopupProps {
   showOnScroll?: boolean;
@@ -17,7 +17,7 @@ export default function DiagnosticPopup({
   scrollThreshold = 800,
   delay = 2000,
   onClose,
-  onAccept
+  // onAccept
 }: DiagnosticPopupProps) {
   const [isVisible, setIsVisible] = useState(false);
   const [hasShown, setHasShown] = useState(false);
@@ -55,33 +55,33 @@ export default function DiagnosticPopup({
     }
   };
 
-  const handleAccept = () => {
-    setIsVisible(false);
-    onAccept?.();
-    
-    // Analytics tracking
-    if (typeof window !== 'undefined' && window.gtag) {
-      window.gtag('event', 'diagnostic_popup_accept', {
-        event_category: 'engagement',
-        event_label: 'popup_accepted',
-        value: 1
-      });
-    }
+  // const handleAccept = () => {
+  //   setIsVisible(false);
+  //   onAccept?.();
+  //   
+  //   // Analytics tracking
+  //   if (typeof window !== 'undefined' && window.gtag) {
+  //     window.gtag('event', 'diagnostic_popup_accept', {
+  //       event_category: 'engagement',
+  //       event_label: 'popup_accepted',
+  //       value: 1
+  //     });
+  //   }
 
-    // Meta Pixel tracking
-    if (typeof window !== 'undefined' && window.fbq) {
-      window.fbq('track', 'Lead', {
-        content_name: 'Diagnóstico Estratégico',
-        content_category: 'engagement'
-      });
-    }
+  //   // Meta Pixel tracking
+  //   if (typeof window !== 'undefined' && window.fbq) {
+  //     window.fbq('track', 'Lead', {
+  //       content_name: 'Diagnóstico Estratégico',
+  //       content_category: 'engagement'
+  //     });
+  //   }
 
-    // Scroll para a seção de contato
-    const contactSection = document.getElementById('contato');
-    if (contactSection) {
-      contactSection.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
+  //   // Scroll para a seção de contato
+  //   const contactSection = document.getElementById('contato');
+  //   if (contactSection) {
+  //     contactSection.scrollIntoView({ behavior: 'smooth' });
+  //   }
+  // };
 
   return (
     <AnimatePresence>

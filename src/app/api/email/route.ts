@@ -193,6 +193,8 @@ Este email foi enviado automaticamente pelo sistema de formulários da IDE Negó
 }
 
 export async function POST(request: NextRequest) {
+  let body: MeetingFormData | null = null;
+  
   try {
     console.log('API Route Email: Recebendo dados para envio de email');
     console.log('Configurações SMTP:', {
@@ -204,7 +206,15 @@ export async function POST(request: NextRequest) {
       hasPassword: !!env.SMTP_PASS
     });
     
-    const body: MeetingFormData = await request.json();
+    body = await request.json();
+    
+    if (!body) {
+      return NextResponse.json({
+        success: false,
+        error: 'Dados do formulário não fornecidos'
+      }, { status: 400 });
+    }
+    
     console.log('Dados recebidos:', {
       name: body.name,
       email: body.email,
@@ -281,7 +291,7 @@ export async function POST(request: NextRequest) {
       error: error instanceof Error ? error.message : 'Unknown error',
       stack: error instanceof Error ? error.stack : undefined,
       timestamp: new Date().toISOString(),
-      body: body
+      body: body || 'Failed to parse request body'
     });
     
     // Mensagens de erro mais específicas
