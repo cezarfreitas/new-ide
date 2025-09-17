@@ -72,6 +72,16 @@ export async function POST(request: NextRequest) {
     // Enviar email
     const info = await transporter.sendMail(mailOptions);
 
+    // Log detalhado da resposta
+    console.log('📧 Email enviado com sucesso:', {
+      messageId: info.messageId,
+      accepted: info.accepted,
+      rejected: info.rejected,
+      pending: info.pending,
+      response: info.response,
+      envelope: info.envelope
+    });
+
     return NextResponse.json({
       success: true,
       message: 'Email enviado com sucesso!',
@@ -80,22 +90,41 @@ export async function POST(request: NextRequest) {
         from: mailOptions.from,
         to: mailOptions.to,
         subject: mailOptions.subject,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        smtpResponse: info.response,
+        accepted: info.accepted,
+        rejected: info.rejected,
+        envelope: info.envelope
       }
     });
 
   } catch (error: any) {
-    console.error('Erro ao enviar email:', error);
+    // Log detalhado do erro
+    console.error('❌ Erro ao enviar email:', {
+      code: error.code,
+      message: error.message,
+      command: error.command,
+      response: error.response,
+      responseCode: error.responseCode,
+      stack: error.stack
+    });
     
     // Tratar diferentes tipos de erro
     let errorMessage = 'Erro desconhecido ao enviar email';
+    let errorDetails = {};
     
     if (error.code === 'EAUTH') {
       errorMessage = 'Erro de autenticação. Verifique usuário e senha.';
+      errorDetails = { suggestion: 'Para Gmail, use App Password em vez da senha normal' };
     } else if (error.code === 'ECONNECTION') {
       errorMessage = 'Erro de conexão. Verifique host e porta SMTP.';
+      errorDetails = { suggestion: 'Verifique se o host e porta estão corretos' };
     } else if (error.code === 'ETIMEDOUT') {
       errorMessage = 'Timeout de conexão. Verifique as configurações de rede.';
+      errorDetails = { suggestion: 'Verifique sua conexão com a internet' };
+    } else if (error.code === 'EENVELOPE') {
+      errorMessage = 'Erro no envelope do email. Verifique os endereços.';
+      errorDetails = { suggestion: 'Verifique se os emails estão no formato correto' };
     } else if (error.message) {
       errorMessage = error.message;
     }
@@ -103,7 +132,14 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       { 
         error: errorMessage,
-        code: error.code || 'UNKNOWN_ERROR'
+        code: error.code || 'UNKNOWN_ERROR',
+        details: {
+          ...errorDetails,
+          command: error.command,
+          response: error.response,
+          responseCode: error.responseCode,
+          timestamp: new Date().toISOString()
+        }
       },
       { status: 500 }
     );

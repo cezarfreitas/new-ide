@@ -18,7 +18,14 @@ export default function TestEmailPage() {
   });
 
   const [isLoading, setIsLoading] = useState(false);
-  const [result, setResult] = useState<{ success: boolean; message: string } | null>(null);
+  const [result, setResult] = useState<{ success: boolean; message: string; details?: any } | null>(null);
+  const [emailHistory, setEmailHistory] = useState<Array<{
+    id: string;
+    timestamp: string;
+    success: boolean;
+    message: string;
+    details: any;
+  }>>([]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;
@@ -44,11 +51,24 @@ export default function TestEmailPage() {
 
       const data = await response.json();
       
-      if (response.ok) {
-        setResult({ success: true, message: 'Email enviado com sucesso!' });
-      } else {
-        setResult({ success: false, message: data.error || 'Erro ao enviar email' });
-      }
+      const resultData = {
+        success: response.ok,
+        message: response.ok ? 'Email enviado com sucesso!' : (data.error || 'Erro ao enviar email'),
+        details: data.details || data
+      };
+      
+      setResult(resultData);
+      
+      // Adicionar ao histórico
+      const historyEntry = {
+        id: Date.now().toString(),
+        timestamp: new Date().toLocaleString('pt-BR'),
+        success: resultData.success,
+        message: resultData.message,
+        details: resultData.details
+      };
+      
+      setEmailHistory(prev => [historyEntry, ...prev.slice(0, 9)]); // Manter apenas os últimos 10
     } catch (error) {
       setResult({ success: false, message: 'Erro de conexão: ' + (error as Error).message });
     } finally {
@@ -68,7 +88,7 @@ export default function TestEmailPage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Formulário de Configuração */}
           <div className="bg-gray-900 rounded-xl p-6 border border-gray-700">
             <h2 className="text-2xl font-semibold text-yellow-400 mb-6">
@@ -225,22 +245,91 @@ export default function TestEmailPage() {
             </h2>
             
             {result ? (
-              <div className={`p-4 rounded-lg ${
-                result.success 
-                  ? 'bg-green-900/50 border border-green-500 text-green-300' 
-                  : 'bg-red-900/50 border border-red-500 text-red-300'
-              }`}>
-                <div className="flex items-center space-x-3">
-                  <span className="text-2xl">
-                    {result.success ? '✅' : '❌'}
-                  </span>
-                  <div>
-                    <p className="font-semibold">
-                      {result.success ? 'Sucesso!' : 'Erro!'}
-                    </p>
-                    <p className="text-sm mt-1">{result.message}</p>
+              <div className="space-y-4">
+                <div className={`p-4 rounded-lg ${
+                  result.success 
+                    ? 'bg-green-900/50 border border-green-500 text-green-300' 
+                    : 'bg-red-900/50 border border-red-500 text-red-300'
+                }`}>
+                  <div className="flex items-center space-x-3">
+                    <span className="text-2xl">
+                      {result.success ? '✅' : '❌'}
+                    </span>
+                    <div>
+                      <p className="font-semibold">
+                        {result.success ? 'Sucesso!' : 'Erro!'}
+                      </p>
+                      <p className="text-sm mt-1">{result.message}</p>
+                    </div>
                   </div>
                 </div>
+
+                {/* Logs Detalhados */}
+                {result.details && (
+                  <div className="bg-gray-800 rounded-lg p-4 border border-gray-600">
+                    <h4 className="text-lg font-semibold text-yellow-400 mb-3">
+                      📋 Logs Detalhados
+                    </h4>
+                    <div className="space-y-2 text-sm">
+                      {result.success ? (
+                        <>
+                          {result.details.messageId && (
+                            <div className="flex justify-between">
+                              <span className="text-gray-400">Message ID:</span>
+                              <span className="text-green-300 font-mono text-xs">
+                                {result.details.messageId}
+                              </span>
+                            </div>
+                          )}
+                          {result.details.smtpResponse && (
+                            <div className="flex justify-between">
+                              <span className="text-gray-400">SMTP Response:</span>
+                              <span className="text-green-300 font-mono text-xs">
+                                {result.details.smtpResponse}
+                              </span>
+                            </div>
+                          )}
+                          {result.details.timestamp && (
+                            <div className="flex justify-between">
+                              <span className="text-gray-400">Timestamp:</span>
+                              <span className="text-gray-300">
+                                {new Date(result.details.timestamp).toLocaleString('pt-BR')}
+                              </span>
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        <>
+                          {result.details.code && (
+                            <div className="flex justify-between">
+                              <span className="text-gray-400">Código do Erro:</span>
+                              <span className="text-red-300 font-mono">
+                                {result.details.code}
+                              </span>
+                            </div>
+                          )}
+                          {result.details.suggestion && (
+                            <div className="mt-2 p-2 bg-blue-900/30 rounded border border-blue-500/50">
+                              <span className="text-blue-300 text-xs">
+                                💡 {result.details.suggestion}
+                              </span>
+                            </div>
+                          )}
+                          {result.details.response && (
+                            <div className="mt-2">
+                              <span className="text-gray-400 text-xs">Resposta do servidor:</span>
+                              <div className="bg-gray-900 p-2 rounded mt-1">
+                                <code className="text-red-300 text-xs">
+                                  {result.details.response}
+                                </code>
+                              </div>
+                            </div>
+                          )}
+                        </>
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
             ) : (
               <div className="text-gray-400 text-center py-8">
@@ -261,6 +350,59 @@ export default function TestEmailPage() {
                 <li>• Para Gmail, ative a verificação em 2 etapas e gere um App Password</li>
               </ul>
             </div>
+          </div>
+
+          {/* Histórico de Emails */}
+          <div className="bg-gray-900 rounded-xl p-6 border border-gray-700">
+            <h2 className="text-2xl font-semibold text-yellow-400 mb-6">
+              📊 Histórico de Envios
+            </h2>
+            
+            {emailHistory.length > 0 ? (
+              <div className="space-y-3 max-h-96 overflow-y-auto">
+                {emailHistory.map((entry) => (
+                  <div
+                    key={entry.id}
+                    className={`p-3 rounded-lg border ${
+                      entry.success
+                        ? 'bg-green-900/20 border-green-500/50'
+                        : 'bg-red-900/20 border-red-500/50'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between mb-2">
+                      <span className={`text-sm font-medium ${
+                        entry.success ? 'text-green-300' : 'text-red-300'
+                      }`}>
+                        {entry.success ? '✅' : '❌'} {entry.success ? 'Sucesso' : 'Erro'}
+                      </span>
+                      <span className="text-xs text-gray-400">
+                        {entry.timestamp}
+                      </span>
+                    </div>
+                    <p className="text-sm text-gray-300 mb-2">
+                      {entry.message}
+                    </p>
+                    {entry.details && (
+                      <details className="text-xs">
+                        <summary className="cursor-pointer text-gray-400 hover:text-gray-300">
+                          Ver detalhes
+                        </summary>
+                        <div className="mt-2 p-2 bg-gray-800 rounded text-gray-300">
+                          <pre className="whitespace-pre-wrap text-xs">
+                            {JSON.stringify(entry.details, null, 2)}
+                          </pre>
+                        </div>
+                      </details>
+                    )}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-gray-400 text-center py-8">
+                <p>Nenhum envio realizado ainda</p>
+                <p className="text-sm mt-2">Os resultados aparecerão aqui</p>
+              </div>
+            )}
           </div>
         </div>
       </div>
