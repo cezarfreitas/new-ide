@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { NavigationItem } from '@/types';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import MeetingModal from './MeetingModal';
 import { useAnalytics } from '@/hooks/useAnalytics';
@@ -15,54 +15,116 @@ interface NavigationProps {
 export default function Navigation({ items }: NavigationProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState<string>('');
   const { trackButtonClick } = useAnalytics();
   const { trackButtonClick: trackMetaButtonClick } = useMetaPixel();
 
-  const handleNavClick = (href: string) => {
+  // Função para navegar para uma seção e atualizar a URL
+  const navigateToSection = (href: string) => {
+    const sectionId = href.replace('#', '');
+    
+    // Atualizar a URL no browser
+    if (typeof window !== 'undefined') {
+      window.history.pushState(null, '', href);
+    }
+    
+    // Fechar menu mobile
     setIsMenuOpen(false);
     
-    // Force scroll to element with multiple attempts
-    const scrollToElement = () => {
-      const element = document.querySelector(href);
+    // Scroll para a seção
+    scrollToSection(sectionId);
+  };
+
+  // Função para fazer scroll suave para uma seção
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    
+    if (element) {
+      const headerHeight = 80;
+      const elementPosition = element.offsetTop - headerHeight;
       
-      if (element) {
-        const headerHeight = 80;
-        const elementPosition = (element as HTMLElement).offsetTop - headerHeight;
-        
-        window.scrollTo({
-          top: Math.max(0, elementPosition),
-          behavior: 'smooth'
-        });
-        return true;
-      } else {
-        // Fallback: try to find element by ID without #
-        const id = href.replace('#', '');
-        const fallbackElement = document.getElementById(id);
-        
-        if (fallbackElement) {
+      window.scrollTo({
+        top: Math.max(0, elementPosition),
+        behavior: 'smooth'
+      });
+      return true;
+    }
+    
+    // Se não encontrou, tentar com delays para aguardar lazy loading
+    const attempts = [100, 300, 600, 1000];
+    attempts.forEach(delay => {
+      setTimeout(() => {
+        const retryElement = document.getElementById(sectionId);
+        if (retryElement) {
           const headerHeight = 80;
-          const elementPosition = fallbackElement.offsetTop - headerHeight;
+          const elementPosition = retryElement.offsetTop - headerHeight;
           
           window.scrollTo({
             top: Math.max(0, elementPosition),
             behavior: 'smooth'
           });
-          return true;
         }
-      }
-      return false;
-    };
-
-    // Try immediate scroll
-    if (scrollToElement()) return;
-    
-    // If not found, try with delays to allow lazy loading
-    const attempts = [100, 300, 600, 1000];
-    attempts.forEach(delay => {
-      setTimeout(() => {
-        scrollToElement();
       }, delay);
     });
+    
+    return false;
+  };
+
+  // Verificar URL hash na inicialização e ao navegar
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash;
+      if (hash) {
+        const sectionId = hash.replace('#', '');
+        setActiveSection(sectionId);
+        // Aguardar um pouco para garantir que as seções foram carregadas
+        setTimeout(() => {
+          scrollToSection(sectionId);
+        }, 100);
+      } else {
+        setActiveSection('inicio'); // Se não há hash, assumir início
+      }
+    };
+
+    // Verificar hash inicial
+    handleHashChange();
+
+    // Escutar mudanças no hash
+    window.addEventListener('hashchange', handleHashChange);
+    
+    return () => {
+      window.removeEventListener('hashchange', handleHashChange);
+    };
+  }, []);
+
+  // Observar scroll para atualizar seção ativa
+  useEffect(() => {
+    const handleScroll = () => {
+      const sections = items.map(item => item.href.replace('#', ''));
+      const scrollPosition = window.scrollY + 100; // Offset para considerar o header
+
+      for (const sectionId of sections) {
+        const element = document.getElementById(sectionId);
+        if (element) {
+          const { offsetTop, offsetHeight } = element;
+          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
+            setActiveSection(sectionId);
+            // Atualizar URL se necessário
+            if (window.location.hash !== `#${sectionId}`) {
+              window.history.replaceState(null, '', `#${sectionId}`);
+            }
+            break;
+          }
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [items]);
+
+  const handleNavClick = (href: string) => {
+    navigateToSection(href);
   };
 
   return (
@@ -86,17 +148,28 @@ export default function Navigation({ items }: NavigationProps) {
             animate={{ opacity: 1, y: 0 }}
             className="hidden lg:flex items-center space-x-8 absolute left-1/2 transform -translate-x-1/2"
           >
-            {items.map((item, index) => (
-              <motion.button 
-                key={index}
-                onClick={() => handleNavClick(item.href)}
-                className="text-gray-300 hover:text-yellow-400 transition-all duration-300 font-medium relative group px-3 py-2 cursor-pointer"
-                whileHover={{ y: -2 }}
-              >
-                {item.label}
-                <span className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-yellow-500 transition-all duration-300 group-hover:w-full"></span>
-              </motion.button>
-            ))}
+            {items.map((item, index) => {
+              const sectionId = item.href.replace('#', '');
+              const isActive = activeSection === sectionId;
+              
+              return (
+                <motion.button 
+                  key={index}
+                  onClick={() => handleNavClick(item.href)}
+                  className={`transition-all duration-300 font-medium relative group px-3 py-2 cursor-pointer ${
+                    isActive 
+                      ? 'text-yellow-400' 
+                      : 'text-gray-300 hover:text-yellow-400'
+                  }`}
+                  whileHover={{ y: -2 }}
+                >
+                  {item.label}
+                  <span className={`absolute -bottom-1 left-1/2 transform -translate-x-1/2 h-0.5 bg-yellow-500 transition-all duration-300 ${
+                    isActive ? 'w-full' : 'w-0 group-hover:w-full'
+                  }`}></span>
+                </motion.button>
+              );
+            })}
           </motion.div>
 
           {/* CTA Button - Right aligned */}
@@ -152,29 +225,42 @@ export default function Navigation({ items }: NavigationProps) {
           className="lg:hidden overflow-hidden bg-black/98 backdrop-blur-lg border-t border-yellow-500/20 shadow-2xl"
         >
           <div className="px-6 py-8 space-y-1">
-            {items.map((item, index) => (
-              <motion.button
-                key={index}
-                onClick={() => handleNavClick(item.href)}
-                className="block text-gray-200 hover:text-yellow-400 hover:bg-yellow-500/10 transition-all duration-300 font-medium py-4 px-4 text-left w-full rounded-lg border border-transparent hover:border-yellow-500/20 group cursor-pointer"
-                initial={{ opacity: 0, x: -30 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.1, duration: 0.4 }}
-                whileHover={{ x: 8 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                <span className="flex items-center justify-between">
-                  {item.label}
-                  <motion.span 
-                    className="text-yellow-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                    initial={{ x: -10 }}
-                    animate={{ x: 0 }}
-                  >
-                    →
-                  </motion.span>
-                </span>
-              </motion.button>
-            ))}
+            {items.map((item, index) => {
+              const sectionId = item.href.replace('#', '');
+              const isActive = activeSection === sectionId;
+              
+              return (
+                <motion.button
+                  key={index}
+                  onClick={() => handleNavClick(item.href)}
+                  className={`block transition-all duration-300 font-medium py-4 px-4 text-left w-full rounded-lg border group cursor-pointer ${
+                    isActive
+                      ? 'text-yellow-400 bg-yellow-500/10 border-yellow-500/30'
+                      : 'text-gray-200 hover:text-yellow-400 hover:bg-yellow-500/10 border-transparent hover:border-yellow-500/20'
+                  }`}
+                  initial={{ opacity: 0, x: -30 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.1, duration: 0.4 }}
+                  whileHover={{ x: 8 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <span className="flex items-center justify-between">
+                    {item.label}
+                    <motion.span 
+                      className={`transition-opacity duration-300 ${
+                        isActive 
+                          ? 'text-yellow-500 opacity-100' 
+                          : 'text-yellow-500 opacity-0 group-hover:opacity-100'
+                      }`}
+                      initial={{ x: -10 }}
+                      animate={{ x: 0 }}
+                    >
+                      →
+                    </motion.span>
+                  </span>
+                </motion.button>
+              );
+            })}
             
             <motion.div 
               className="pt-4 border-t border-yellow-500/20 mt-6"
