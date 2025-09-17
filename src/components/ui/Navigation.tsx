@@ -23,46 +23,101 @@ export default function Navigation({ items }: NavigationProps) {
   const navigateToSection = (href: string) => {
     const sectionId = href.replace('#', '');
     
-    // Atualizar a URL no browser
-    if (typeof window !== 'undefined') {
-      window.history.pushState(null, '', href);
-    }
+    console.log(`Navegando para seção: ${sectionId}`);
     
-    // Fechar menu mobile
+    // Fechar menu mobile primeiro
     setIsMenuOpen(false);
     
-    // Scroll para a seção
-    scrollToSection(sectionId);
+    // Aguardar um pouco para o menu fechar no mobile
+    setTimeout(() => {
+      // Atualizar a URL no browser
+      if (typeof window !== 'undefined') {
+        window.history.pushState(null, '', href);
+      }
+      
+      // Scroll para a seção
+      scrollToSection(sectionId);
+    }, 100);
   };
 
   // Função para fazer scroll suave para uma seção
   const scrollToSection = (sectionId: string) => {
+    console.log(`Tentando fazer scroll para seção: ${sectionId}`);
+    
     const element = document.getElementById(sectionId);
     
     if (element) {
+      console.log(`Elemento encontrado: ${sectionId}`, element);
+      
+      // Calcular posição considerando header e mobile
       const headerHeight = 80;
       const elementPosition = element.offsetTop - headerHeight;
       
-      window.scrollTo({
-        top: Math.max(0, elementPosition),
-        behavior: 'smooth'
-      });
+      console.log(`Posição calculada: ${elementPosition}`);
+      
+      // Detectar se é mobile
+      const isMobile = window.innerWidth <= 768;
+      
+      if (isMobile) {
+        console.log('Dispositivo mobile detectado, usando scroll direto');
+        // No mobile, usar scroll direto para garantir funcionamento
+        window.scrollTo(0, Math.max(0, elementPosition));
+      } else {
+        // No desktop, usar scroll suave
+        window.scrollTo({
+          top: Math.max(0, elementPosition),
+          behavior: 'smooth'
+        });
+        
+        // Fallback para mobile se smooth scroll não funcionar
+        setTimeout(() => {
+          const currentScroll = window.pageYOffset;
+          const targetScroll = Math.max(0, elementPosition);
+          
+          if (Math.abs(currentScroll - targetScroll) > 50) {
+            console.log('Smooth scroll falhou, usando scroll direto');
+            window.scrollTo(0, targetScroll);
+          }
+        }, 500);
+      }
+      
       return true;
     }
     
+    console.log(`Elemento não encontrado: ${sectionId}`);
+    
     // Se não encontrou, tentar com delays para aguardar lazy loading
-    const attempts = [100, 300, 600, 1000];
-    attempts.forEach(delay => {
+    const attempts = [100, 300, 600, 1000, 2000];
+    attempts.forEach((delay, index) => {
       setTimeout(() => {
+        console.log(`Tentativa ${index + 1} para encontrar ${sectionId}`);
         const retryElement = document.getElementById(sectionId);
         if (retryElement) {
+          console.log(`Elemento encontrado na tentativa ${index + 1}: ${sectionId}`);
           const headerHeight = 80;
           const elementPosition = retryElement.offsetTop - headerHeight;
           
-          window.scrollTo({
-            top: Math.max(0, elementPosition),
-            behavior: 'smooth'
-          });
+          const isMobile = window.innerWidth <= 768;
+          
+          if (isMobile) {
+            window.scrollTo(0, Math.max(0, elementPosition));
+          } else {
+            window.scrollTo({
+              top: Math.max(0, elementPosition),
+              behavior: 'smooth'
+            });
+            
+            // Fallback para mobile
+            setTimeout(() => {
+              const currentScroll = window.pageYOffset;
+              const targetScroll = Math.max(0, elementPosition);
+              
+              if (Math.abs(currentScroll - targetScroll) > 50) {
+                console.log('Smooth scroll falhou na tentativa, usando scroll direto');
+                window.scrollTo(0, targetScroll);
+              }
+            }, 500);
+          }
         }
       }, delay);
     });
@@ -124,7 +179,24 @@ export default function Navigation({ items }: NavigationProps) {
   }, [items]);
 
   const handleNavClick = (href: string) => {
+    console.log(`Clique detectado no link: ${href}`);
     navigateToSection(href);
+  };
+
+  // Função específica para mobile com touch
+  const handleMobileNavClick = (href: string) => {
+    console.log(`Touch detectado no link mobile: ${href}`);
+    
+    // Prevenir comportamento padrão
+    event?.preventDefault();
+    
+    // Fechar menu mobile imediatamente
+    setIsMenuOpen(false);
+    
+    // Aguardar um pouco e fazer scroll
+    setTimeout(() => {
+      navigateToSection(href);
+    }, 150);
   };
 
   return (
@@ -232,7 +304,14 @@ export default function Navigation({ items }: NavigationProps) {
               return (
                 <motion.button
                   key={index}
-                  onClick={() => handleNavClick(item.href)}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleMobileNavClick(item.href);
+                  }}
+                  onTouchEnd={(e) => {
+                    e.preventDefault();
+                    handleMobileNavClick(item.href);
+                  }}
                   className={`block transition-all duration-300 font-medium py-4 px-4 text-left w-full rounded-lg border group cursor-pointer ${
                     isActive
                       ? 'text-yellow-400 bg-yellow-500/10 border-yellow-500/30'

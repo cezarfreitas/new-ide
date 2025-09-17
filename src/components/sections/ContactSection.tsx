@@ -110,7 +110,7 @@ export default function ContactSection() {
             },
             body: JSON.stringify({
               ...marketingData,
-              phone: marketingData.company, // Usar company como phone para o template de email
+              phone: marketingData.company || 'Não informado', // Usar company como phone para o template de email
               form_type: 'contact_form_fallback'
             }),
           });

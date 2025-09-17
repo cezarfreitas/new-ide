@@ -144,7 +144,12 @@ function createEmailTemplate(data: MeetingFormData): { subject: string; html: st
           
           <div class="footer">
             <p>Este email foi enviado automaticamente pelo sistema de formulários da IDE Negócios Digitais.</p>
-            <p>Responda diretamente para o cliente: <a href="mailto:${data.email}">${data.email}</a></p>
+            <p><strong>💬 Para responder:</strong> Use o botão "Responder" do seu email - a resposta irá diretamente para <a href="mailto:${data.email}">${data.email}</a></p>
+            <p style="background: #fef3c7; padding: 10px; border-radius: 6px; border-left: 4px solid #f59e0b; margin-top: 15px;">
+              <strong>📧 Email do cliente:</strong> ${data.email}<br>
+              <strong>📱 Telefone:</strong> ${data.phone}<br>
+              <strong>🏢 Empresa:</strong> ${data.company || 'Não informado'}
+            </p>
           </div>
         </div>
       </div>
@@ -175,7 +180,13 @@ Valor da Conversão: R$ ${data.conversion_value || 100}
 
 ---
 Este email foi enviado automaticamente pelo sistema de formulários da IDE Negócios Digitais.
-Responda diretamente para o cliente: ${data.email}
+
+💬 PARA RESPONDER: Use o botão "Responder" do seu email - a resposta irá diretamente para ${data.email}
+
+📧 INFORMAÇÕES DO CLIENTE:
+- Email: ${data.email}
+- Telefone: ${data.phone}
+- Empresa: ${data.company || 'Não informado'}
   `;
   
   return { subject, html, text };
@@ -184,11 +195,30 @@ Responda diretamente para o cliente: ${data.email}
 export async function POST(request: NextRequest) {
   try {
     console.log('API Route Email: Recebendo dados para envio de email');
+    console.log('Configurações SMTP:', {
+      host: env.SMTP_HOST,
+      port: env.SMTP_PORT,
+      user: env.SMTP_USER,
+      from: env.SMTP_FROM,
+      to: env.SMTP_TO,
+      hasPassword: !!env.SMTP_PASS
+    });
     
     const body: MeetingFormData = await request.json();
+    console.log('Dados recebidos:', {
+      name: body.name,
+      email: body.email,
+      phone: body.phone,
+      form_type: body.form_type
+    });
     
     // Validar dados obrigatórios
     if (!body.name || !body.email || !body.phone) {
+      console.error('Dados obrigatórios faltando:', {
+        hasName: !!body.name,
+        hasEmail: !!body.email,
+        hasPhone: !!body.phone
+      });
       return NextResponse.json({
         success: false,
         error: 'Dados obrigatórios não fornecidos (nome, email, telefone)'
@@ -197,7 +227,11 @@ export async function POST(request: NextRequest) {
     
     // Verificar se as configurações de email estão disponíveis
     if (!env.SMTP_HOST || !env.SMTP_USER || !env.SMTP_PASS) {
-      console.warn('Configurações de email não encontradas. Email não será enviado.');
+      console.error('Configurações de email não encontradas:', {
+        hasHost: !!env.SMTP_HOST,
+        hasUser: !!env.SMTP_USER,
+        hasPass: !!env.SMTP_PASS
+      });
       return NextResponse.json({
         success: false,
         error: 'Configurações de email não disponíveis'
@@ -225,8 +259,8 @@ export async function POST(request: NextRequest) {
     // Configurar email
     const mailOptions = {
       from: `"IDE Negócios Digitais" <${env.SMTP_FROM}>`,
-      to: env.SMTP_TO,
-      replyTo: body.email, // Permitir resposta direta para o cliente
+      to: env.SMTP_TO, // Sempre enviar para cezar@idenegociosdigitais.com.br
+      replyTo: body.email, // Reply-to sempre será o email do formulário
       subject: emailTemplate.subject,
       text: emailTemplate.text,
       html: emailTemplate.html,

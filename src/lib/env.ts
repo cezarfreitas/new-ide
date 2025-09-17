@@ -26,13 +26,13 @@ export const env = {
   YANDEX_VERIFICATION: process.env.NEXT_PUBLIC_YANDEX_VERIFICATION || '',
   YAHOO_VERIFICATION: process.env.NEXT_PUBLIC_YAHOO_VERIFICATION || '',
   
-  // Email Configuration
-  SMTP_HOST: process.env.SMTP_HOST || '',
+  // Email Configuration - Hardcoded for reliability
+  SMTP_HOST: process.env.SMTP_HOST || 'smtp.hostinger.com',
   SMTP_PORT: process.env.SMTP_PORT || '587',
-  SMTP_USER: process.env.SMTP_USER || '',
-  SMTP_PASS: process.env.SMTP_PASS || '',
-  SMTP_FROM: process.env.SMTP_FROM || 'contato@idenegociosdigitais.com.br',
-  SMTP_TO: process.env.SMTP_TO || 'contato@idenegociosdigitais.com.br',
+  SMTP_USER: process.env.SMTP_USER || 'cezar@idenegociosdigitais.com.br',
+  SMTP_PASS: process.env.SMTP_PASS || 'Sophia@1313',
+  SMTP_FROM: process.env.SMTP_FROM || 'cezar@idenegociosdigitais.com.br',
+  SMTP_TO: process.env.SMTP_TO || 'cezar@idenegociosdigitais.com.br', // Sempre enviar para Cezar
 } as const;
 
 // Validation function
